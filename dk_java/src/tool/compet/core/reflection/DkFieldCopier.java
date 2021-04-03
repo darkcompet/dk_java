@@ -7,10 +7,10 @@ package tool.compet.core.reflection;
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
 import com.google.gson.annotations.SerializedName;
-import tool.compet.core.type.DkCaller1;
-import tool.compet.core.type.DkCaller2;
-import tool.compet.core.util.DkLogs;
-import tool.compet.core.util.DkUtils;
+import tool.compet.core.DkCaller1;
+import tool.compet.core.DkCaller2;
+import tool.compet.core.DkLogs;
+import tool.compet.core.DkUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;

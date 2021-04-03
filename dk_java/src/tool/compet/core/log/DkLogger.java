@@ -1,8 +1,8 @@
 package tool.compet.core.log;
 
 import androidx.annotation.Nullable;
-import tool.compet.core.constant.DkConst;
-import tool.compet.core.util.DkStrings;
+import tool.compet.core.DkConst;
+import tool.compet.core.DkStrings;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
