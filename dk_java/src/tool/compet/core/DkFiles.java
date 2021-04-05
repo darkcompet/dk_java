@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class DkFiles {
 	// region Java core
-
-	public static boolean createFile(String filePath) {
+    
+    public static boolean createFile(String filePath) {
 		return createFile(new File(filePath));
 	}
 
@@ -206,7 +206,7 @@ public class DkFiles {
 
 	public static String makePath(String... names) {
 		if (names == null) {
-			return "";
+			return DkConst.EMPTY_STRING;
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -224,6 +224,6 @@ public class DkFiles {
 
 		return sb.toString();
 	}
-
-	// endregion Java core
+    
+    // endregion Java core
 }

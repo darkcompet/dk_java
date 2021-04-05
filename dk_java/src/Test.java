@@ -2,7 +2,7 @@ import tool.compet.core.DkLogs;
 
 public class Test {
 	private void start() throws Exception {
-		double n = 0.99;
+		double n = 0.81;
 		double low = 0;
 		double high = n;
 		double mid = 1;
