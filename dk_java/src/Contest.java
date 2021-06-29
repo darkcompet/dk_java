@@ -1,5 +1,4 @@
-import tool.compet.core.DkMaths;
-import tool.compet.core.DkLogs;
+import tool.compet.core4j.DkMaths;
 
 import java.io.*;
 
@@ -49,7 +48,7 @@ public class Contest {
 	}
 
 	int digit(long a, int keta) {
-		return ((int) (a / DkMaths.fastPow(10, keta, MOD))) % 10;
+		return ((int) (a / DkMaths.fastPow(10, keta))) % 10;
 	}
 
 	protected void debug(String format, Object... args) {

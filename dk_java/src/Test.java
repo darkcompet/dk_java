@@ -1,4 +1,4 @@
-import tool.compet.core.DkLogs;
+import tool.compet.core4j.DkConsoleLogs;
 
 public class Test {
 	private void start() throws Exception {
@@ -26,7 +26,7 @@ public class Test {
 			}
 		}
 
-		DkLogs.debug(this, "Mid: %f, stepCount: %d, low: %f, high: %f", mid, stepCount, low, high);
+		DkConsoleLogs.debug(this, "Mid: %f, stepCount: %d, low: %f, high: %f", mid, stepCount, low, high);
 	}
 
 	public static void main(String[] args) {
