@@ -10,59 +10,20 @@ import java.util.Collections;
 /**
  * God observable node.
  */
-class MyGodArrayObservable<T> extends DkObservable<T> {
-	private final Iterable<T> items;
+class MyGodArrayObservable<M> extends DkObservable<M, MyGodArrayObservable> {
+	private final Iterable<M> items;
 
-	MyGodArrayObservable(T single) {
-		this.items = Collections.singletonList(single);
+	MyGodArrayObservable(M item) {
+		this.items = Collections.singletonList(item);
 	}
 
-	MyGodArrayObservable(T[] items) {
+	MyGodArrayObservable(M[] items) {
 		this.items = Arrays.asList(items);
 	}
 
 	@Override
-	protected void subscribeActual(DkObserver<T> child) {
-		ArrayObserver<T> wrapper = new ArrayObserver<>(child);
+	public void subscribeActual(DkObserver<M> child) throws Exception {
+		OwnGodArrayObserver<M> wrapper = new OwnGodArrayObserver<>(child);
 		wrapper.start(items);
-	}
-
-	static class ArrayObserver<T> extends DkControllable<T> {
-		ArrayObserver(DkObserver<T> child) {
-			super(child);
-		}
-
-		void start(Iterable<T> items) {
-			try {
-				onSubscribe(this);
-
-				if (isCancel) {
-					isCanceled = true;
-					return;
-				}
-
-				for (T item : items) {
-					if (isCancel) {
-						isCanceled = true;
-						return;
-					}
-					onNext(item);
-				}
-
-				onComplete();
-			}
-			catch (Exception e) {
-				onError(e);
-			}
-			finally {
-				onFinal();
-			}
-		}
-
-		@Override
-		public void onSubscribe(DkControllable controllable) throws Exception {
-			// Just tell child subscribe event.
-			child.onSubscribe(controllable);
-		}
 	}
 }

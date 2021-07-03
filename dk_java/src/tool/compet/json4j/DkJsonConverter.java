@@ -32,7 +32,7 @@ public class DkJsonConverter {
 	/**
 	 * Converts JSON to POJO of given type.
 	 *
-	 * @return POJO object if succeed. Otherwise returns null.
+	 * @return POJO object if succeed. Otherwise (failed) returns null.
 	 */
 	public <T> T json2obj(String json, Class<T> classOfT) {
 		try {

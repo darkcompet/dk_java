@@ -14,7 +14,7 @@ import java.util.List;
  * Utility class for array or array-list.
  */
 public class DkArrays {
-	public static boolean empty(Object[] arr) {
+	public static boolean empty(@Nullable Object[] arr) {
 		return arr == null || arr.length == 0;
 	}
 
@@ -30,46 +30,38 @@ public class DkArrays {
 	}
 
 	public static void reverse(int[] arr) {
-		int N = arr.length;
 		int tmp;
-
-		for (int i = 0, j = N - 1; i < j; ++i, --j) {
-			tmp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = tmp;
+		for (int left = 0, right = arr.length - 1; left < right; ++left, --right) {
+			tmp = arr[left];
+			arr[left] = arr[right];
+			arr[right] = tmp;
 		}
 	}
 
 	public static void reverse(long[] arr) {
-		int N = arr.length;
 		long tmp;
-
-		for (int i = 0, j = N - 1; i < j; ++i, --j) {
-			tmp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = tmp;
+		for (int left = 0, right = arr.length - 1; left < right; ++left, --right) {
+			tmp = arr[left];
+			arr[left] = arr[right];
+			arr[right] = tmp;
 		}
 	}
 
 	public static void reverse(float[] arr) {
-		int N = arr.length;
 		float tmp;
-
-		for (int i = 0, j = N - 1; i < j; ++i, --j) {
-			tmp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = tmp;
+		for (int left = 0, right = arr.length - 1; left < right; ++left, --right) {
+			tmp = arr[left];
+			arr[left] = arr[right];
+			arr[right] = tmp;
 		}
 	}
 
 	public static void reverse(double[] arr) {
-		int N = arr.length;
 		double tmp;
-
-		for (int i = 0, j = N - 1; i < j; ++i, --j) {
-			tmp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = tmp;
+		for (int left = 0, right = arr.length - 1; left < right; ++left, --right) {
+			tmp = arr[left];
+			arr[left] = arr[right];
+			arr[right] = tmp;
 		}
 	}
 

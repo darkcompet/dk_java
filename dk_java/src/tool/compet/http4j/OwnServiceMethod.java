@@ -1,10 +1,8 @@
 /*
- * Copyright (c) 2017-2020 DarkCompet. All rights reserved.
+ * Copyright (c) 2017-2021 DarkCompet. All rights reserved.
  */
 
 package tool.compet.http4j;
-
-import android.graphics.Bitmap;
 
 import androidx.collection.ArrayMap;
 
@@ -14,19 +12,14 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-import tool.compet.core.DkLogcats;
-import tool.compet.core.graphics.DkBitmaps;
+import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkReflections;
 import tool.compet.core4j.DkStrings;
 import tool.compet.core4j.DkUtils;
-import tool.compet.core4j.reflection.DkReflections;
-import tool.compet.json4j.DkJsonConverter;
 
 public class OwnServiceMethod<T> {
 	// Header key-value pairs
 	final Map<String, String> headers;
-
-	// Response class: Bitmap, String, Object...
-	final Class<T> responseClass;
 
 	// Request method: GET, POST...
 	String requestMethod;
@@ -45,7 +38,7 @@ public class OwnServiceMethod<T> {
 	OwnServiceMethod(String baseUrl, Method method) {
 		this.tmpBaseUrl = baseUrl;
 		this.headers = new ArrayMap<>();
-		this.responseClass = DkReflections.getLastGenericReturnClass(method);
+//		this.responseClass = DkReflections.getLastGenericReturnClass(method);
 
 		parseOnMethod(method);
 	}
@@ -141,7 +134,7 @@ public class OwnServiceMethod<T> {
 				body = URLEncoder.encode(tmpFormData.toString(), "UTF-8").getBytes(Charset.forName("UTF-8"));
 			}
 			catch (Exception e) {
-				DkLogcats.error(this, e);
+				DkConsoleLogs.error(this, e);
 			}
 		}
 	}
@@ -209,18 +202,20 @@ public class OwnServiceMethod<T> {
 	}
 
 	private void parseOnParams(DkBody bodyInfo, Object paramValue) {
-		if (paramValue instanceof String) {
-			body = ((String) paramValue).getBytes();
+		if (! (paramValue instanceof byte[])) {
+			throw new RuntimeException("Body type must be `byte[]`");
 		}
-		else if (paramValue.getClass().isPrimitive()) {
-			body = String.valueOf(paramValue).getBytes();
-		}
-		else if (paramValue instanceof Bitmap) {
-			body = DkBitmaps.toByteArray((Bitmap) paramValue);
-		}
-		else {
-			body = DkJsonConverter.getIns().obj2json(paramValue).getBytes();
-		}
+		body = (byte[]) paramValue;
+//		body = ((String) paramValue).getBytes();
+//		else if (paramValue.getClass().isPrimitive()) {
+//			body = String.valueOf(paramValue).getBytes();
+//		}
+//		else if (paramValue instanceof Bitmap) {
+//			body = DkBitmaps.toByteArray((Bitmap) paramValue);
+//		}
+//		else {
+//			body = DkJsonConverter.getIns().obj2json(paramValue).getBytes();
+//		}
 	}
 
 	private void parseOnParams(DkUrlEncoded bodyInfo, Object paramValue) {

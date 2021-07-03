@@ -16,8 +16,8 @@ public interface DkHttpConst {
 
 	// Authentication method
 	String AUTHORIZATION = "Authorization";
-	String BASIC = "Basic ";
-	String BEARER = "Bearer ";
+	String BASIC_AUTH = "Basic ";
+	String BEARER_AUTH = "Bearer ";
 
 	// Content Format
 	String CONTENT_TYPE = "Content-Type";

@@ -13,18 +13,18 @@ import java.net.HttpURLConnection;
  */
 public class TheHttpResponse {
 	// Connection for read stream, must close after decode input
-	private final HttpURLConnection connection;
+	protected final HttpURLConnection connection;
 
 	// Http status code: HttpURLConnection.*
-	private int code = -1;
+	protected int code = -1;
 
 	// Http Message
-	private String message;
+	protected String message;
 
 	// Content from server
-	private TheResponseBody body;
+	protected TheResponseBody body;
 
-	TheHttpResponse(HttpURLConnection connection) {
+	protected TheHttpResponse(HttpURLConnection connection) {
 		this.connection = connection;
 	}
 

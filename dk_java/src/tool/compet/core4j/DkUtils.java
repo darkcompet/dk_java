@@ -5,6 +5,7 @@
 package tool.compet.core4j;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -84,5 +85,22 @@ public class DkUtils {
 				utf8Result.add(line);
 			}
 		}
+	}
+
+	public static String stream2string(InputStream is) {
+		String line;
+		String ls = DkConst.LS;
+		StringBuilder sb = new StringBuilder(256);
+
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+			while ((line = br.readLine()) != null) {
+				sb.append(line).append(ls);
+			}
+		}
+		catch (Exception e) {
+			DkConsoleLogs.error(DkUtils.class, e);
+		}
+
+		return sb.toString();
 	}
 }

@@ -5,12 +5,10 @@
 package tool.compet.stream4j;
 
 import tool.compet.core4j.DkExecutorService;
-import tool.compet.stream.MyUiScheduler;
 
 @SuppressWarnings("unchecked")
 public class DkSchedulers {
-	private static DkScheduler ioScheduler;
-	private static DkScheduler uiScheduler;
+	protected static DkScheduler ioScheduler;
 
 	// Background thread scheduler
 	public static <T> DkScheduler<T> io() {
@@ -22,17 +20,5 @@ public class DkSchedulers {
 			}
 		}
 		return (DkScheduler<T>) ioScheduler;
-	}
-
-	// Android ui thread scheduler
-	public static <T> DkScheduler<T> ui() {
-		if (uiScheduler == null) {
-			synchronized (DkSchedulers.class) {
-				if (uiScheduler == null) {
-					uiScheduler = new MyUiScheduler<>();
-				}
-			}
-		}
-		return (DkScheduler<T>) uiScheduler;
 	}
 }

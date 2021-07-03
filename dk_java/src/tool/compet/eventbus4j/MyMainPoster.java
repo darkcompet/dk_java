@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2020 DarkCompet. All rights reserved.
+ * Copyright (c) 2017-2021 DarkCompet. All rights reserved.
  */
 
 package tool.compet.eventbus4j;
@@ -9,21 +9,25 @@ import android.os.Looper;
 import android.os.Message;
 
 import tool.compet.core.DkLogcats;
+import tool.compet.eventbus4j.DkEventBus;
+import tool.compet.eventbus4j.OwnPendingPost;
+import tool.compet.eventbus4j.OwnPendingPostQueue;
+import tool.compet.eventbus4j.OwnSubscription;
 
 class MyMainPoster implements Handler.Callback {
-	private final DkEventBus eventbus;
-	private final MyPendingPostQueue queue;
+	private final tool.compet.eventbus4j.DkEventBus eventbus;
+	private final OwnPendingPostQueue queue;
 	private final Handler handler;
 	private volatile boolean isRunning;
 
 	MyMainPoster(DkEventBus eventbus) {
 		this.eventbus = eventbus;
-		this.queue = new MyPendingPostQueue();
+		this.queue = new OwnPendingPostQueue();
 		this.handler = new Handler(Looper.getMainLooper(), this);
 	}
 
-	void enqueue(MySubscription subscription, Object event) {
-		MyPendingPost pendingPost = new MyPendingPost(subscription, event);
+	void enqueue(OwnSubscription subscription, Object event) {
+		OwnPendingPost pendingPost = new OwnPendingPost(subscription, event);
 
 		synchronized (this) {
 			queue.enqueue(pendingPost);
@@ -43,7 +47,7 @@ class MyMainPoster implements Handler.Callback {
 	@Override
 	public boolean handleMessage(Message msg) {
 		long start = System.currentTimeMillis();
-		MyPendingPost pendingPost;
+		OwnPendingPost pendingPost;
 
 		while (true) {
 			synchronized (queue) {

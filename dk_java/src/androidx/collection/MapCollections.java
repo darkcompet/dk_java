@@ -29,13 +29,11 @@ import java.util.Set;
  * Helper for writing standard Java collection interfaces to a data
  * structure like {@link ArrayMap}.
  */
+@SuppressWarnings("unchecked")
 abstract class MapCollections<K, V> {
-	@Nullable
-	EntrySet mEntrySet;
-	@Nullable
-	KeySet mKeySet;
-	@Nullable
-	ValuesCollection mValues;
+	@Nullable EntrySet entrySet;
+	@Nullable KeySet keySet;
+	@Nullable ValuesCollection values;
 
 	final class ArrayIterator<T> implements Iterator<T> {
 		final int mOffset;
@@ -534,24 +532,24 @@ abstract class MapCollections<K, V> {
 	}
 
 	public Set<Map.Entry<K, V>> getEntrySet() {
-		if (mEntrySet == null) {
-			mEntrySet = new EntrySet();
+		if (entrySet == null) {
+			entrySet = new EntrySet();
 		}
-		return mEntrySet;
+		return entrySet;
 	}
 
 	public Set<K> getKeySet() {
-		if (mKeySet == null) {
-			mKeySet = new KeySet();
+		if (keySet == null) {
+			keySet = new KeySet();
 		}
-		return mKeySet;
+		return keySet;
 	}
 
 	public Collection<V> getValues() {
-		if (mValues == null) {
-			mValues = new ValuesCollection();
+		if (values == null) {
+			values = new ValuesCollection();
 		}
-		return mValues;
+		return values;
 	}
 
 	protected abstract int colGetSize();

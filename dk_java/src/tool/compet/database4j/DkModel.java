@@ -8,9 +8,9 @@ package tool.compet.database4j;
  * Subclass should extends this to listen trigger upsert from DAO.
  */
 public abstract class DkModel {
-	// Trigger before create insert-params
+	// Triggered before build query (before perform insert)
 	public abstract void onInsert();
 
-	// Trigger before create update-params
+	// Triggered before build query (before perform update)
 	public abstract void onUpdate();
 }

@@ -4,7 +4,7 @@
 
 package tool.compet.stream4j;
 
-import tool.compet.core4j.BuildConfig;
+import tool.compet.core4j.DkBuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 
 import java.util.concurrent.*;
@@ -72,7 +72,7 @@ class MyIoScheduler<T> implements DkScheduler<T> {
 
 		boolean ok = future.cancel(mayInterruptIfRunning);
 
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Cancelled task %s, result: %b", task.toString(), ok);
 		}
 		if (ok) {

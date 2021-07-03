@@ -6,7 +6,7 @@ package tool.compet.http4j;
 
 import androidx.collection.ArrayMap;
 import androidx.collection.SimpleArrayMap;
-import tool.compet.core4j.BuildConfig;
+import tool.compet.core4j.DkBuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 import tool.compet.core4j.DkUtils;
 
@@ -24,16 +24,19 @@ import java.net.URL;
  *
  *    int code = httpResponse.code;
  *    String message = httpResponse.message;
- *    Bitmap bitmap = httpResponse.response;
+ *    Bitmap bitmap = httpResponse.body().bitmap();
  * </pre></code>
+ *
+ * @param <T> Subclass of this.
  */
-public class DkHttpClient {
-	private final SimpleArrayMap<String, String> headers = new ArrayMap<>();
-	private String requestMethod = DkHttpConst.GET;
-	private String link;
-	private byte[] body;
-	private int connectTimeout = 15000;
-	private int readTimeout = 30000;
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class DkHttpClient<T extends DkHttpClient> {
+	protected final SimpleArrayMap<String, String> headers = new ArrayMap<>();
+	protected String requestMethod = DkHttpConst.GET;
+	protected String link;
+	protected byte[] body;
+	protected int connectTimeout = 15000;
+	protected int readTimeout = 30000;
 
 	public DkHttpClient() {
 	}
@@ -42,39 +45,39 @@ public class DkHttpClient {
 		this.link = url;
 	}
 
-	public DkHttpClient setUrl(String url) {
+	public T setUrl(String url) {
 		this.link = url;
-		return this;
+		return (T) this;
 	}
 
-	public DkHttpClient setRequestMethod(String requestMethod) {
+	public T setRequestMethod(String requestMethod) {
 		this.requestMethod = requestMethod;
-		return this;
+		return (T) this;
 	}
 
-	public DkHttpClient addToHeader(String key, String value) {
+	public T addToHeader(String key, String value) {
 		headers.put(key, value);
-		return this;
+		return (T) this;
 	}
 
-	public DkHttpClient addAllToHeader(SimpleArrayMap<String, String> map) {
+	public T addAllToHeader(SimpleArrayMap<String, String> map) {
 		headers.putAll(map);
-		return this;
+		return (T) this;
 	}
 
-	public DkHttpClient setConnectTimeout(int connectTimeout) {
+	public T setConnectTimeout(int connectTimeout) {
 		this.connectTimeout = connectTimeout;
-		return this;
+		return (T) this;
 	}
 
-	public DkHttpClient setReadTimeout(int readTimeout) {
+	public T setReadTimeout(int readTimeout) {
 		this.readTimeout = readTimeout;
-		return this;
+		return (T) this;
 	}
 
-	public DkHttpClient setBody(byte[] body) {
+	public T setBody(byte[] body) {
 		this.body = body;
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -85,7 +88,7 @@ public class DkHttpClient {
 		if (link == null) {
 			throw new RuntimeException("Must provide url");
 		}
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Start request with link: %s", link);
 		}
 		final URL url = new URL(link);
@@ -113,14 +116,14 @@ public class DkHttpClient {
 		return response;
 	}
 
-	private void doGet(HttpURLConnection conn) throws Exception {
+	protected void doGet(HttpURLConnection conn) throws Exception {
 		// nothing to do now
 	}
 
-	private void doPost(HttpURLConnection conn) throws Exception {
+	protected void doPost(HttpURLConnection conn) throws Exception {
 		if (body != null) {
 			conn.setDoOutput(true);
-
+			// Write full post data to body
 			BufferedOutputStream os = new BufferedOutputStream(conn.getOutputStream());
 			os.write(body);
 			os.close();

@@ -5,8 +5,6 @@
 package tool.compet.database4j;
 
 public interface OwnConst {
-	String ROWID = "_rowid_";
-
 	String K_BASIC = "basic";
 	String K_RAW = "raw";
 

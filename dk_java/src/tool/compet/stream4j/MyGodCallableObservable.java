@@ -10,50 +10,16 @@ import tool.compet.core4j.DkCallable;
  * God observable node.
  * When start, this run callable and then handle next events.
  */
-class MyGodCallableObservable<T> extends DkObservable<T> {
-	private final DkCallable<T> execution;
+class MyGodCallableObservable<M> extends DkObservable<M, MyGodCallableObservable> {
+	private final DkCallable<M> execution;
 
-	MyGodCallableObservable(DkCallable<T> execution) {
+	MyGodCallableObservable(DkCallable<M> execution) {
 		this.execution = execution;
 	}
 
 	@Override
-	protected void subscribeActual(DkObserver<T> child) throws Exception {
-		CallableObserver<T> wrapper = new CallableObserver<>(child, execution);
+	public void subscribeActual(DkObserver<M> child) throws Exception {
+		OwnGodCallableObserver<M> wrapper = new OwnGodCallableObserver<>(child, execution);
 		wrapper.start();
-	}
-
-	static class CallableObserver<T> extends DkControllable<T> {
-		final DkCallable<T> callable;
-
-		CallableObserver(DkObserver<T> child, DkCallable<T> callable) {
-			super(child);
-			this.callable = callable;
-		}
-
-		void start() {
-			try {
-				onSubscribe(this);
-
-				if (isCancel) {
-					isCanceled = true;
-					return;
-				}
-
-				onNext(callable.call());
-				onComplete();
-			}
-			catch (Exception e) {
-				onError(e);
-			}
-			finally {
-				onFinal();
-			}
-		}
-
-		@Override
-		public void onSubscribe(DkControllable controllable) throws Exception {
-			child.onSubscribe(controllable);
-		}
 	}
 }

@@ -16,29 +16,29 @@ class MyAsyncPoster {
 		serialExecutor = new SerialExecutor(DkExecutorService.getExecutor(), eventbus);
 	}
 
-	void post(DkEventBus eventbus, MySubscription subscription, Object event) {
+	void post(DkEventBus eventbus, OwnSubscription subscription, Object event) {
 		DkExecutorService.getExecutor().execute(() -> {
 			eventbus.invokeSubscriber(subscription, event);
 		});
 	}
 
-	void enqueue(MySubscription subscription, Object eventData) {
-		serialExecutor.execute(new MyPendingPost(subscription, eventData));
+	void enqueue(OwnSubscription subscription, Object eventData) {
+		serialExecutor.execute(new OwnPendingPost(subscription, eventData));
 	}
 
 	static class SerialExecutor {
 		final ScheduledExecutorService service;
-		final MyPendingPostQueue queue;
+		final OwnPendingPostQueue queue;
 		final DkEventBus eventbus;
-		MyPendingPost active;
+		OwnPendingPost active;
 
 		SerialExecutor(ScheduledExecutorService executor, DkEventBus eventbus) {
 			this.service = executor;
-			this.queue = new MyPendingPostQueue();
+			this.queue = new OwnPendingPostQueue();
 			this.eventbus = eventbus;
 		}
 
-		synchronized void execute(MyPendingPost pp) {
+		synchronized void execute(OwnPendingPost pp) {
 			queue.enqueue(pp);
 			// start schedule if have not active task
 			if (active == null) {

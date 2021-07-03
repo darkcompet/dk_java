@@ -7,50 +7,16 @@ package tool.compet.stream4j;
 /**
  * God observable node.
  */
-class MyGodControllableObservable<T> extends DkObservable<T> {
-	private final DkControllable<T> controllable;
+class MyGodControllableObservable<M> extends DkObservable<M, MyGodControllableObservable> {
+	private final DkControllable<M> controllable;
 
-	MyGodControllableObservable(DkControllable<T> controllable) {
+	MyGodControllableObservable(DkControllable<M> controllable) {
 		this.controllable = controllable;
 	}
 
 	@Override
-	protected void subscribeActual(DkObserver<T> child) {
-		ControllableObserver<T> wrapper = new ControllableObserver<>(child, controllable);
+	public void subscribeActual(DkObserver<M> child) throws Exception {
+		OwnGodControllableObserver<M> wrapper = new OwnGodControllableObserver<>(child, controllable);
 		wrapper.start();
-	}
-
-	static class ControllableObserver<T> extends DkControllable<T> implements DkObserver<T> {
-		private final DkControllable<T> controllable;
-
-		ControllableObserver(DkObserver<T> child, DkControllable<T> controllable) {
-			super(child);
-			this.controllable = controllable;
-		}
-
-		void start() {
-			try {
-				onSubscribe(this);
-
-				if (isCancel) {
-					isCanceled = true;
-					return;
-				}
-
-				onNext(controllable.call());
-				onComplete();
-			}
-			catch (Exception e) {
-				onError(e);
-			}
-			finally {
-				onFinal();
-			}
-		}
-
-		@Override
-		public void onSubscribe(DkControllable controllable) throws Exception {
-			child.onSubscribe(controllable);
-		}
 	}
 }

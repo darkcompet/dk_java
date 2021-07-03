@@ -4,26 +4,23 @@
 
 package tool.compet.http4j;
 
-import android.graphics.Bitmap;
-import tool.compet.core.DkConst;
-import tool.compet.core.DkLogcats;
-import tool.compet.core.graphics.DkBitmaps;
-import tool.compet.core4j.BuildConfig;
-import tool.compet.core4j.DkConsoleLogs;
-import tool.compet.core4j.DkUtils;
-import tool.compet.core4j.collection.DkByteArrayList;
-import tool.compet.json4j.DkJsonConverter;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class TheResponseBody {
-	private final HttpURLConnection connection;
+import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkConst;
+import tool.compet.core4j.DkUtils;
+import tool.compet.core4j.DkByteArrayList;
+import tool.compet.json4j.DkJsonConverter;
 
-	TheResponseBody(HttpURLConnection connection) {
+public class TheResponseBody {
+	protected final HttpURLConnection connection;
+
+	protected TheResponseBody(HttpURLConnection connection) {
 		this.connection = connection;
 	}
 
@@ -43,14 +40,14 @@ public class TheResponseBody {
 				byteList.addRange(buffer, 0, readCount);
 			}
 
-			if (DEBUG) {
-				DkLogcats.info(this, "Got response as bytes, count: %d", byteList.size());
+			if (DkBuildConfig.DEBUG) {
+				DkConsoleLogs.info(this, "Got response as bytes, count: %d", byteList.size());
 			}
 
 			return byteList.toArray();
 		}
 		catch (Exception e) {
-			DkLogcats.error(this, e);
+			DkConsoleLogs.error(this, e);
 			return null;
 		}
 		finally {
@@ -74,15 +71,15 @@ public class TheResponseBody {
 			}
 		}
 		catch (Exception e) {
-			DkLogcats.error(DkLogcats.class, e);
+			DkConsoleLogs.error(TheResponseBody.class, e);
 			return null;
 		}
 		finally {
 			connection.disconnect();
 		}
 
-		if (DEBUG) {
-			DkLogcats.info(this, "Got response as string: %s", builder.toString());
+		if (DkBuildConfig.DEBUG) {
+			DkConsoleLogs.info(this, "Got response as string: %s", builder.toString());
 		}
 
 		return builder.toString();
@@ -98,7 +95,7 @@ public class TheResponseBody {
 		try {
 			String json = DkUtils.stream2string(connection.getInputStream());
 
-			if (BuildConfig.DEBUG) {
+			if (DkBuildConfig.DEBUG) {
 				DkConsoleLogs.info(this, "Got response as json: %s", json);
 			}
 
@@ -106,19 +103,6 @@ public class TheResponseBody {
 		}
 		catch (Exception e) {
 			DkConsoleLogs.error(TheResponseBody.class, e);
-			return null;
-		}
-		finally {
-			connection.disconnect();
-		}
-	}
-
-	public Bitmap bitmap() {
-		try {
-			return DkBitmaps.load(connection.getInputStream());
-		}
-		catch (Exception e) {
-			DkLogcats.error(DkLogcats.class, e);
 			return null;
 		}
 		finally {

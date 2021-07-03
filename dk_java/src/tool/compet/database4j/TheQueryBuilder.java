@@ -6,36 +6,16 @@ package tool.compet.database4j;
 
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import tool.compet.core4j.DkCollections;
 import tool.compet.core4j.DkConst;
 import tool.compet.core4j.DkRunner1;
 import tool.compet.core4j.DkStrings;
-import tool.compet.core4j.reflection.DkReflectionFinder;
+import tool.compet.reflection4j.DkReflectionFinder;
 
-import static tool.compet.database4j.OwnConst.K_AND;
-import static tool.compet.database4j.OwnConst.K_ASC;
-import static tool.compet.database4j.OwnConst.K_BASIC;
-import static tool.compet.database4j.OwnConst.K_DESC;
-import static tool.compet.database4j.OwnConst.K_EQ;
-import static tool.compet.database4j.OwnConst.K_IN;
-import static tool.compet.database4j.OwnConst.K_INNER;
-import static tool.compet.database4j.OwnConst.K_IS_NOT_NULL;
-import static tool.compet.database4j.OwnConst.K_IS_NULL;
-import static tool.compet.database4j.OwnConst.K_LEFT;
-import static tool.compet.database4j.OwnConst.K_NOT_IN;
-import static tool.compet.database4j.OwnConst.K_NOT_NULL;
-import static tool.compet.database4j.OwnConst.K_NULL;
-import static tool.compet.database4j.OwnConst.K_OR;
-import static tool.compet.database4j.OwnConst.K_RAW;
-import static tool.compet.database4j.OwnConst.K_RIGHT;
+import java.lang.reflect.Field;
+import java.util.*;
+
+import static tool.compet.database4j.OwnConst.*;
 
 /**
  * This is base query builder for various query language as sqlite, mysql, postgresql...

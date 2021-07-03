@@ -28,7 +28,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Notice: should remove all debug code when release.
 	 */
 	public static void debug(@Nullable Object where, @Nullable String format, Object... args) {
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			logger.debug(where, format, args);
 		}
 	}
@@ -37,7 +37,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Log info. Only run at debug env (ignored at production env).
 	 */
 	public static void info(@Nullable Object where, @Nullable String format, Object... args) {
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			logger.info(where, format, args);
 		}
 	}
@@ -46,7 +46,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Log notice. Only run at debug env (ignored at production env).
 	 */
 	public static void notice(@Nullable Object where, @Nullable String format, Object... args) {
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			logger.notice(where, format, args);
 		}
 	}
@@ -83,7 +83,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Start benchmark. Only run at debug env (ignored at production env).
 	 */
 	public static void tick(@Nullable Object where, String task) {
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			if (benchmarkTaskNames == null) {
 				benchmarkTaskNames = new ArrayDeque<>();
 			}
@@ -98,7 +98,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * End benchmark. Only run at debug env (ignored at production env).
 	 */
 	public static void tock(@Nullable Object where) {
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			long elapsed = System.currentTimeMillis() - benchmarkStartTime;
 			logger.debug(where,
 				"Task [%s] end in: %d s %d ms",
@@ -123,13 +123,13 @@ public class DkConsoleLogs implements DkLogger.LogType {
 			case TYPE_DEBUG:
 			case TYPE_INFO:
 			case TYPE_NOTICE: {
-				System.out.println("[" + logType + "] " + message);
+				System.out.println("xxx_" + logType + ": " + message);
 				break;
 			}
 			case TYPE_WARNING:
 			case TYPE_ERROR:
 			case TYPE_EMERGENCY: {
-				System.err.println("[" + logType + "] " + message);
+				System.err.println("xxx_" + logType + ": " + message);
 				break;
 			}
 		}

@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import tool.compet.core4j.BuildConfig;
+import tool.compet.core4j.DkBuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 import tool.compet.core4j.DkUtils;
 
@@ -33,7 +33,8 @@ import tool.compet.core4j.DkUtils;
  *       .subscribe();
  * </pre>
  */
-public class DkApiService {
+@SuppressWarnings("unchecked")
+public class DkApiService<T extends DkApiService> {
 	protected String baseUrl;
 	protected String credential;
 	protected int connectTimeoutMillis;
@@ -45,9 +46,9 @@ public class DkApiService {
 		serviceMethods = new ArrayMap<>();
 	}
 
-	public DkApiService setBaseUrl(String baseUrl) {
+	public T setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -56,28 +57,28 @@ public class DkApiService {
 	 *
 	 * @param credential Normally, it is string at base64 of `username:password`;
 	 */
-	public DkApiService setBasicCredential(String credential) {
-		this.credential = DkHttpConst.BASIC + credential;
-		return this;
+	public T setBasicCredential(String credential) {
+		this.credential = DkHttpConst.BASIC_AUTH + credential;
+		return (T) this;
 	}
 
 	/**
 	 * Static set bearer credential to authenticate with server.
 	 * Note that, dynamic adding should be performed in Service's methods.
 	 */
-	public DkApiService setBearerCredential(String auth) {
-		this.credential = DkHttpConst.BEARER + auth;
-		return this;
+	public T setBearerCredential(String credential) {
+		this.credential = DkHttpConst.BEARER_AUTH + credential;
+		return (T) this;
 	}
 
-	public DkApiService setConnectTimeoutMillis(int connectTimeoutSecond) {
+	public T setConnectTimeoutMillis(int connectTimeoutSecond) {
 		this.connectTimeoutMillis = connectTimeoutSecond;
-		return this;
+		return (T) this;
 	}
 
-	public DkApiService setReadTimeoutMillis(int readTimeoutSecond) {
+	public T setReadTimeoutMillis(int readTimeoutSecond) {
 		this.readTimeoutMillis = readTimeoutSecond;
-		return this;
+		return (T) this;
 	}
 
 	public String getBaseUrl() {
@@ -97,7 +98,7 @@ public class DkApiService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T create(Class<T> serviceClass) {
+	public <S> S create(Class<S> serviceClass) {
 		validateConfig();
 
 		InvocationHandler handler = (Object proxy, Method method, Object[] args) -> {
@@ -109,7 +110,7 @@ public class DkApiService {
 			return callApi(method, args);
 		};
 
-		return (T) Proxy.newProxyInstance(serviceClass.getClassLoader(), new Class[]{serviceClass}, handler);
+		return (S) Proxy.newProxyInstance(serviceClass.getClassLoader(), new Class[]{serviceClass}, handler);
 	}
 
 	private void validateConfig() {
@@ -137,31 +138,29 @@ public class DkApiService {
 			}
 		}
 
-		final OwnServiceMethod<?> finalServiceMethod = serviceMethod;
-
 		// Rebuild arguments of service method since args are dynamic
 		String requestMethod;
 		byte[] body;
 		ArrayMap<String, String> headers = new ArrayMap<>();
 		String url;
-		Class<?> responseClass;
+//		Class<?> responseClass;
 
-		synchronized (finalServiceMethod) {
-			finalServiceMethod.build(method, args);
+		synchronized (serviceMethod) {
+			serviceMethod.build(method, args);
 
-			requestMethod = finalServiceMethod.requestMethod;
-			body = finalServiceMethod.body;
-			headers.putAll(finalServiceMethod.headers);
-			url = finalServiceMethod.url;
-			responseClass = finalServiceMethod.responseClass;
+			requestMethod = serviceMethod.requestMethod;
+			body = serviceMethod.body;
+			headers.putAll(serviceMethod.headers);
+			url = serviceMethod.url;
+//			responseClass = serviceMethod.responseClass;
 		}
 
 		// Start request to server with parsed info
-		return startRequest(requestMethod, body, headers, url, responseClass);
+		return startRequest(requestMethod, body, headers, url);
 	}
 
-	private <R> TheHttpResponse startRequest(String requestMethod, byte[] body,
-		SimpleArrayMap<String, String> headers, String url, Class<R> responseClass) throws Exception {
+	private TheHttpResponse startRequest(String requestMethod, byte[] body,
+		SimpleArrayMap<String, String> headers, String url) throws Exception {
 
 		DkHttpClient httpClient = new DkHttpClient(url)
 			.setReadTimeout(readTimeoutMillis)
@@ -175,7 +174,7 @@ public class DkApiService {
 
 		httpClient.addAllToHeader(headers);
 
-		if (BuildConfig.DEBUG) {
+		if (DkBuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Network request at thread: %s", Thread.currentThread().toString());
 		}
 

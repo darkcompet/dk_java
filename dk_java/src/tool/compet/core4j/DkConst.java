@@ -7,7 +7,7 @@ public interface DkConst {
 	 * Useful constant.
 	 */
 	String LS = System.getProperty("line.separator");
-	String FS = File.separator;
+	String FS = File.separator; // file path separator: / (unix, macos...) or \\ (windows...)
 	String EMPTY_STRING = "";
 	char SPACE_CHAR = ' '; // 1 byte
 

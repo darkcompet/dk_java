@@ -50,6 +50,7 @@ import java.util.Set;
  * item, it may reduce the capacity to better match the current size.  In the future an
  * explicit call to set the capacity should turn off this aggressive shrinking behavior.</p>
  */
+@SuppressWarnings("unchecked")
 public class ArrayMap<K, V> extends SimpleArrayMap<K, V> implements Map<K, V> {
 	@Nullable
 	MapCollections<K, V> mCollections;

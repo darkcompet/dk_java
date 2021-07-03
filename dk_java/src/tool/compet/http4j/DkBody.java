@@ -11,8 +11,8 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Use this for body which be sent to server. Body type will be: Primitive, String, Bitmap
- * and Object which can be converted to Json string.
+ * Use this on a param to make it as body which be sent to server.
+ * Body type must be: byte[].
  */
 @Target(PARAMETER)
 @Retention(RUNTIME)

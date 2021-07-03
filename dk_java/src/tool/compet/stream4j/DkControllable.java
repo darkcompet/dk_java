@@ -11,7 +11,7 @@ import tool.compet.core4j.DkUtils;
 /**
  * This node can pause, resume, cancel the task.
  */
-public class DkControllable<T> extends MyControllable implements Callable<T>, DkObserver<T> {
+public class DkControllable<T> extends OwnControllable implements Callable<T>, DkObserver<T> {
 	protected final DkObserver<T> child;
 
 	public DkControllable(DkObserver<T> child) {
