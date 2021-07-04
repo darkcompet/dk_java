@@ -13,11 +13,10 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 import tool.compet.core4j.DkConsoleLogs;
-import tool.compet.core4j.DkReflections;
 import tool.compet.core4j.DkStrings;
 import tool.compet.core4j.DkUtils;
 
-public class OwnServiceMethod<T> {
+public class OwnServiceMethod {
 	// Header key-value pairs
 	final Map<String, String> headers;
 

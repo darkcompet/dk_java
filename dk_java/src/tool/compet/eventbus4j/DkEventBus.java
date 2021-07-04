@@ -42,13 +42,13 @@ import tool.compet.reflection4j.DkReflectionFinder;
 public class DkEventBus {
 	void foo() {
 //		DkEventBus.getIns().observe(this, "abc", obj -> {});
-//		DkEventBus.getIns().observe(this, "xyz", obj -> {}, setting -> setting.runOnMainThread().priority(10));
+//		DkEventBus.getIns().observe(this, "xyz", obj -> {}, option -> option.runOnMainThread().priority(10));
 //
 //		DkEventBus.getIns().post("abc", 1200);
 //		DkEventBus.getIns().post("xyz", new DkEventModel<Integer>(1200));
 	}
 
-	private static DkEventBus INS_DEFAULT;
+	private static DkEventBus INS;
 
 	// Store subscriptions for each ID
 	protected final DkIntObjectArrayMap<CopyOnWriteArrayList<OwnSubscription>> subscriptions;
@@ -71,14 +71,14 @@ public class DkEventBus {
 	}
 
 	public static DkEventBus getIns() {
-		if (INS_DEFAULT == null) {
+		if (INS == null) {
 			synchronized (DkEventBus.class) {
-				if (INS_DEFAULT == null) {
-					INS_DEFAULT = new DkEventBus();
+				if (INS == null) {
+					INS = new DkEventBus();
 				}
 			}
 		}
-		return INS_DEFAULT;
+		return INS;
 	}
 
 	/**

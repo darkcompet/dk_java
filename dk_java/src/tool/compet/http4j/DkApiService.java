@@ -40,7 +40,7 @@ public class DkApiService<T extends DkApiService> {
 	protected int connectTimeoutMillis;
 	protected int readTimeoutMillis;
 
-	protected final SimpleArrayMap<Method, OwnServiceMethod<?>> serviceMethods;
+	protected final SimpleArrayMap<Method, OwnServiceMethod> serviceMethods;
 
 	public DkApiService() {
 		serviceMethods = new ArrayMap<>();
@@ -124,14 +124,14 @@ public class DkApiService<T extends DkApiService> {
 
 	private TheHttpResponse callApi(Method method, Object[] args) throws Exception {
 		// Create and cache service method
-		OwnServiceMethod<?> serviceMethod;
+		OwnServiceMethod serviceMethod;
 
 		synchronized (serviceMethods) {
 			serviceMethod = serviceMethods.get(method);
 		}
 
 		if (serviceMethod == null) {
-			serviceMethod = new OwnServiceMethod<>(baseUrl, method);
+			serviceMethod = new OwnServiceMethod(baseUrl, method);
 
 			synchronized (serviceMethods) {
 				serviceMethods.put(method, serviceMethod);
