@@ -38,8 +38,10 @@ import tool.compet.reflection4j.DkReflectionFinder;
  * <p></p>
  * <p>
  * Refer：https://github.com/greenrobot/EventBus
+ *
+ * @param <T> Subclass type.
  */
-public class DkEventBus {
+public class DkEventBus<T> {
 	void foo() {
 //		DkEventBus.getIns().observe(this, "abc", obj -> {});
 //		DkEventBus.getIns().observe(this, "xyz", obj -> {}, option -> option.runOnMainThread().priority(10));
@@ -84,7 +86,7 @@ public class DkEventBus {
 	/**
 	 * Add newly all subscriptions of this target to bus system.
 	 */
-	public <T> void register(T subscriber) {
+	public void register(Object subscriber) {
 		Class subscriberClass = subscriber.getClass();
 
 		// Lookup subscription methods of subscriber
@@ -151,7 +153,7 @@ public class DkEventBus {
 	/**
 	 * Remove all subscriptions of this target from bus system
 	 */
-	public synchronized <T> void unregister(T subscriber) {
+	public synchronized void unregister(Object subscriber) {
 		// For Class: remove from subscription methods
 		subscriptionMethodCache.remove(subscriber.getClass());
 
@@ -178,7 +180,7 @@ public class DkEventBus {
 	/**
 	 * Check whether this subscriber was registered or not.
 	 */
-	public synchronized <T> boolean isRegistered(T subscriber) {
+	public synchronized boolean isRegistered(Object subscriber) {
 		DkIntObjectArrayMap<CopyOnWriteArrayList<OwnSubscription>> cache = subscriptions;
 
 		for (int index = 0, N = cache.size(); index < N; ++index) {
@@ -201,7 +203,7 @@ public class DkEventBus {
 	/**
 	 * Check whether this Class was registered or not.
 	 */
-	public <T> boolean isRegistered(Class<T> subscriber) {
+	public boolean isRegistered(Class<?> subscriber) {
 		List<OwnSubscriptionMethod> methods;
 
 		synchronized (subscriptionMethodCache) {
@@ -214,7 +216,7 @@ public class DkEventBus {
 	/**
 	 * Notify all subscriptions that have same id.
 	 */
-	public <T> void post(int id, T data) {
+	public void post(int id, Object data) {
 		CopyOnWriteArrayList<OwnSubscription> subscriptions;
 
 		synchronized (this.subscriptions) {
@@ -233,7 +235,7 @@ public class DkEventBus {
 	/**
 	 * Post to given target class.
 	 */
-	public <T> void post(int id, Class subscriber, T data) {
+	public void post(int id, Class subscriber, Object data) {
 		CopyOnWriteArrayList<OwnSubscription> subscriptions;
 
 		synchronized (this.subscriptions) {
@@ -255,7 +257,7 @@ public class DkEventBus {
 	/**
 	 * Post to targets that not be in excepted target classes.
 	 */
-	public <T> void postExcept(int id, T data, Class... exceptSubscriberClasses) {
+	public void postExcept(int id, Object data, Class... exceptSubscriberClasses) {
 		CopyOnWriteArrayList<OwnSubscription> subscriptions;
 
 		synchronized (this.subscriptions) {
@@ -277,7 +279,7 @@ public class DkEventBus {
 	/**
 	 * Post to targets that not be in excepted targets.
 	 */
-	public <T> void postExcept(int id, T data, Object... exceptSubscribers) {
+	public void postExcept(int id, Object data, Object... exceptSubscribers) {
 		CopyOnWriteArrayList<OwnSubscription> subscriptions;
 
 		synchronized (this.subscriptions) {
@@ -300,7 +302,7 @@ public class DkEventBus {
 	 * Post sticky the event to all subscriptions that has same id.
 	 * Note that, subscription should take care of removing this sticky event.
 	 */
-	public <T> void postSticky(int id, T event) {
+	public void postSticky(int id, Object event) {
 		synchronized (stickyEvents) {
 			List<Object> events = stickyEvents.get(id);
 
@@ -358,7 +360,7 @@ public class DkEventBus {
 		}
 	}
 
-	protected <T> void invokeSubscriber(OwnSubscription subscription, T eventData) {
+	protected void invokeSubscriber(OwnSubscription subscription, Object eventData) {
 		if (subscription.active) {
 			try {
 				subscription.invoke(eventData);
