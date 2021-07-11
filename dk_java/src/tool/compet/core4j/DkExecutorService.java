@@ -23,7 +23,7 @@ public class DkExecutorService {
 	}
 
 	public static void install() {
-		// By default, we need 2 to 4 processors
+		// By default, we need 2 to 4 processors, exclude main (ui) thread
 		int corePoolSize = Math.max(2, Math.min(4, Runtime.getRuntime().availableProcessors() - 1));
 		install(corePoolSize, 1 + (corePoolSize << 1), 1, TimeUnit.MINUTES);
 	}

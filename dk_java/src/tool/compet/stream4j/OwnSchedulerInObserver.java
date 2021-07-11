@@ -7,7 +7,7 @@ package tool.compet.stream4j;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.BuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 
 public class OwnSchedulerInObserver<M> extends DkControllable<M> {
@@ -55,7 +55,7 @@ public class OwnSchedulerInObserver<M> extends DkControllable<M> {
 
 		isCanceled = ok;
 
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Cancel task: " + task + ", ok: " + ok);
 		}
 

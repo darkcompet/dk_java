@@ -8,14 +8,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import androidx.annotation.NonNull;
+
 import tool.compet.core.DkLogcats;
-import tool.compet.eventbus4j.DkEventBus;
-import tool.compet.eventbus4j.OwnPendingPost;
-import tool.compet.eventbus4j.OwnPendingPostQueue;
-import tool.compet.eventbus4j.OwnSubscription;
 
 class MyMainPoster implements Handler.Callback {
-	private final tool.compet.eventbus4j.DkEventBus eventbus;
+	private final DkEventBus eventbus;
 	private final OwnPendingPostQueue queue;
 	private final Handler handler;
 	private volatile boolean isRunning;
@@ -32,10 +30,10 @@ class MyMainPoster implements Handler.Callback {
 		synchronized (this) {
 			queue.enqueue(pendingPost);
 
-			if (!isRunning) {
+			if (! isRunning) {
 				isRunning = true;
 
-				if (!handler.sendMessageDelayed(Message.obtain(handler), 0)) {
+				if (! handler.sendMessageDelayed(Message.obtain(handler), 0)) {
 					// give a change to try again
 					isRunning = false;
 					DkLogcats.warning(this, "Could not send handler message");
@@ -45,7 +43,7 @@ class MyMainPoster implements Handler.Callback {
 	}
 
 	@Override
-	public boolean handleMessage(Message msg) {
+	public boolean handleMessage(@NonNull Message msg) {
 		long start = System.currentTimeMillis();
 		OwnPendingPost pendingPost;
 
@@ -70,7 +68,7 @@ class MyMainPoster implements Handler.Callback {
 			// Because Android framework maybe skip frames which coming too close,
 			// so we Only request next message if elapsed time over actual frameDelay (10ms)
 			if (System.currentTimeMillis() - start > 10) {
-				if (!handler.sendMessageDelayed(Message.obtain(handler), 0)) {
+				if (! handler.sendMessageDelayed(Message.obtain(handler), 0)) {
 					// give a change to try send message again
 					isRunning = false;
 					DkLogcats.warning(this, "Could not send handler message again");

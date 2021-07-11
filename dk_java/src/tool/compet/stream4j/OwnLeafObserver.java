@@ -4,7 +4,7 @@
 
 package tool.compet.stream4j;
 
-import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.BuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 
 /**
@@ -17,7 +17,7 @@ public class OwnLeafObserver<T> implements DkObserver<T> {
 
 	@Override
 	public void onSubscribe(DkControllable controllable) {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			__startTime = System.currentTimeMillis();
 		}
 	}
@@ -28,21 +28,21 @@ public class OwnLeafObserver<T> implements DkObserver<T> {
 
 	@Override
 	public void onError(Throwable e) {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.error(this, e, "Stream error after %d (ms)", System.currentTimeMillis() - __startTime);
 		}
 	}
 
 	@Override
 	public void onComplete() {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Stream complete after %d (ms)", System.currentTimeMillis() - __startTime);
 		}
 	}
 
 	@Override
 	public void onFinal() {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Stream final after %d (ms)", System.currentTimeMillis() - __startTime);
 
 			if (++__testFinalCount > 1) {

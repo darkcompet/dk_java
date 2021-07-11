@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.BuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 import tool.compet.core4j.DkConst;
 import tool.compet.core4j.DkUtils;
@@ -40,7 +40,7 @@ public class TheResponseBody {
 				byteList.addRange(buffer, 0, readCount);
 			}
 
-			if (DkBuildConfig.DEBUG) {
+			if (BuildConfig.DEBUG) {
 				DkConsoleLogs.info(this, "Got response as bytes, count: %d", byteList.size());
 			}
 
@@ -78,7 +78,7 @@ public class TheResponseBody {
 			connection.disconnect();
 		}
 
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Got response as string: %s", builder.toString());
 		}
 
@@ -95,7 +95,7 @@ public class TheResponseBody {
 		try {
 			String json = DkUtils.stream2string(connection.getInputStream());
 
-			if (DkBuildConfig.DEBUG) {
+			if (BuildConfig.DEBUG) {
 				DkConsoleLogs.info(this, "Got response as json: %s", json);
 			}
 

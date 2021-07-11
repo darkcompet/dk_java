@@ -3,6 +3,9 @@ package tool.compet.core4j;
 import java.io.File;
 
 public interface DkConst {
+	// Unique object, we can use it as not-found value, data not set value...
+	Object UID_OBJ = new Object();
+
 	/**
 	 * Useful constant.
 	 */

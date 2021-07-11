@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.BuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 import tool.compet.core4j.DkUtils;
 
@@ -174,7 +174,7 @@ public class DkApiService<T extends DkApiService> {
 
 		httpClient.addAllToHeader(headers);
 
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Network request at thread: %s", Thread.currentThread().toString());
 		}
 

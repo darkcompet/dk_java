@@ -73,8 +73,12 @@ public class DkObjCopier {
 
 			if (dstField != null) {
 				try {
-					srcField.setAccessible(true);
-					dstField.setAccessible(true);
+					if (! srcField.isAccessible()) {
+						srcField.setAccessible(true);
+					}
+					if (! dstField.isAccessible()) {
+						dstField.setAccessible(true);
+					}
 
 					Object srcFieldValue = srcField.get(src);
 					Object dstFieldValue = dstField.get(dst);

@@ -4,7 +4,7 @@
 
 package tool.compet.stream4j;
 
-import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.BuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 
 public class OwnObserver<T> implements DkObserver<T> {
@@ -38,7 +38,7 @@ public class OwnObserver<T> implements DkObserver<T> {
 	public void onFinal() {
 		child.onFinal();
 
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			if (++__testFinalCount > 1) {
 				DkConsoleLogs.warning(this, "Wrong implementation of #onFinal. Please review code !");
 			}

@@ -4,7 +4,7 @@
 
 package tool.compet.stream4j;
 
-import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.BuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 
 /**
@@ -80,7 +80,7 @@ public abstract class OwnControllable {
 			ok = parent.cancel(mayInterruptThread);
 		}
 
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Cancelled with mayInterruptThread %b inside parent with result %b",
 				mayInterruptThread, ok);
 		}

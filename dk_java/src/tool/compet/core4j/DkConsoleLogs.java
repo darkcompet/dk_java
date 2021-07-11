@@ -28,7 +28,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Notice: should remove all debug code when release.
 	 */
 	public static void debug(@Nullable Object where, @Nullable String format, Object... args) {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			logger.debug(where, format, args);
 		}
 	}
@@ -37,7 +37,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Log info. Only run at debug env (ignored at production env).
 	 */
 	public static void info(@Nullable Object where, @Nullable String format, Object... args) {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			logger.info(where, format, args);
 		}
 	}
@@ -46,7 +46,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Log notice. Only run at debug env (ignored at production env).
 	 */
 	public static void notice(@Nullable Object where, @Nullable String format, Object... args) {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			logger.notice(where, format, args);
 		}
 	}
@@ -83,7 +83,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * Start benchmark. Only run at debug env (ignored at production env).
 	 */
 	public static void tick(@Nullable Object where, String task) {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			if (benchmarkTaskNames == null) {
 				benchmarkTaskNames = new ArrayDeque<>();
 			}
@@ -98,7 +98,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	 * End benchmark. Only run at debug env (ignored at production env).
 	 */
 	public static void tock(@Nullable Object where) {
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			long elapsed = System.currentTimeMillis() - benchmarkStartTime;
 			logger.debug(where,
 				"Task [%s] end in: %d s %d ms",

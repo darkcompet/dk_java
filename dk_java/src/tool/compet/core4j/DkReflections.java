@@ -6,9 +6,12 @@ package tool.compet.core4j;
 
 import androidx.annotation.Nullable;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
+import tool.compet.core.DkLogcats;
 
 /**
  * Reflection utility class.
@@ -116,5 +119,26 @@ public class DkReflections {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Obtain static field value from a class.
+	 *
+	 * @param fieldName For eg,. frag_home
+	 * @param clazz For eg,. R.layout.class
+	 * @return Field value if found. Otherwise return not found value `DkConst.UID_OBJ`.
+	 */
+	public static Object getStaticFieldValue(String fieldName, Class<?> clazz) {
+		try {
+			Field field = clazz.getDeclaredField(fieldName);
+			if (! field.isAccessible()) {
+				field.setAccessible(true);
+			}
+			return field.get(null);
+		}
+		catch (Exception e) {
+			DkLogcats.error(DkLogcats.class, e);
+		}
+		return DkConst.UID_OBJ;
 	}
 }

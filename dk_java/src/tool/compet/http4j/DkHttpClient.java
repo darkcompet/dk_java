@@ -6,7 +6,7 @@ package tool.compet.http4j;
 
 import androidx.collection.ArrayMap;
 import androidx.collection.SimpleArrayMap;
-import tool.compet.core4j.DkBuildConfig;
+import tool.compet.core4j.BuildConfig;
 import tool.compet.core4j.DkConsoleLogs;
 import tool.compet.core4j.DkUtils;
 
@@ -88,7 +88,7 @@ public class DkHttpClient<T extends DkHttpClient> {
 		if (link == null) {
 			throw new RuntimeException("Must provide url");
 		}
-		if (DkBuildConfig.DEBUG) {
+		if (BuildConfig.DEBUG) {
 			DkConsoleLogs.info(this, "Start request with link: %s", link);
 		}
 		final URL url = new URL(link);
