@@ -11,8 +11,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import tool.compet.core.DkLogcats;
-
 /**
  * Reflection utility class.
  */
@@ -137,7 +135,7 @@ public class DkReflections {
 			return field.get(null);
 		}
 		catch (Exception e) {
-			DkLogcats.error(DkLogcats.class, e);
+			DkConsoleLogs.error(DkReflections.class, e);
 		}
 		return DkConst.UID_OBJ;
 	}
