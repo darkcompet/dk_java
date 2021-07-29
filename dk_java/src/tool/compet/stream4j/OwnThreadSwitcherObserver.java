@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 import tool.compet.core4j.DkRunnable1;
 
 public class OwnThreadSwitcherObserver<T> extends OwnObserver<T> {
@@ -67,7 +67,7 @@ public class OwnThreadSwitcherObserver<T> extends OwnObserver<T> {
 			// If some exception was raised previously, just ignore call `onError()` at this time
 			// -> We will handle it at `onError()` or `onComplete()` event instead.
 			else {
-				DkConsoleLogs.error(this, eventCallException);
+				DkLogs.error(this, eventCallException);
 			}
 		}, delay, timeUnit, isSerial);
 	}
@@ -118,7 +118,7 @@ public class OwnThreadSwitcherObserver<T> extends OwnObserver<T> {
 		catch (Exception e) {
 			// Cannot schedule -> pass final-event to child node and write log
 			child.onFinal();
-			DkConsoleLogs.error(this, e);
+			DkLogs.error(this, e);
 		}
 	}
 }

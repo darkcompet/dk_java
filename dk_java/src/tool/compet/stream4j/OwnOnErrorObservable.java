@@ -6,11 +6,11 @@ package tool.compet.stream4j;
 
 import tool.compet.core4j.DkRunnable1;
 
-public class OwnOnErrorObservable<M> extends DkObservable<M, OwnOnErrorObservable> {
+public class OwnOnErrorObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkRunnable1<Throwable> action;
 
 	public OwnOnErrorObservable(DkObservableSource<M> parent, DkRunnable1<Throwable> action) {
-		super(parent);
+		this.parent = parent;
 		this.action = action;
 	}
 

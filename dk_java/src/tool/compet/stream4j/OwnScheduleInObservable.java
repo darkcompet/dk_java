@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Normally, switch thread, and run code of upper nodes in IO (background) thread.
  */
-public class OwnScheduleInObservable<M> extends DkObservable<M, OwnScheduleInObservable> {
+public class OwnScheduleInObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkScheduler<M> scheduler;
 	private final long delay;
 	private final TimeUnit timeUnit;
@@ -20,7 +20,7 @@ public class OwnScheduleInObservable<M> extends DkObservable<M, OwnScheduleInObs
 		long delay, TimeUnit unit,
 		boolean isSerial
 	) {
-		super(parent);
+		this.parent = parent;
 		this.scheduler = scheduler;
 		this.delay = delay;
 		this.timeUnit = unit;

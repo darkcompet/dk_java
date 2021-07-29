@@ -41,7 +41,7 @@ public class DkUtils {
 			return true;
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(DkUtils.class, e);
+			DkLogs.error(DkUtils.class, e);
 			return false;
 		}
 	}
@@ -98,7 +98,7 @@ public class DkUtils {
 			}
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(DkUtils.class, e);
+			DkLogs.error(DkUtils.class, e);
 		}
 
 		return sb.toString();

@@ -4,7 +4,7 @@
 
 package tool.compet.eventbus4j;
 
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 import tool.compet.core4j.DkExecutorService;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -56,8 +56,8 @@ class MyAsyncPoster {
 					eventbus.invokeSubscriber(active);
 				}
 				catch (Exception e) {
-					DkConsoleLogs.warning(this, "Error occured when run task on serial-executor: " + active);
-					DkConsoleLogs.error(this, e);
+					DkLogs.warning(this, "Error occured when run task on serial-executor: " + active);
+					DkLogs.error(this, e);
 				}
 				finally {
 					executeNext();

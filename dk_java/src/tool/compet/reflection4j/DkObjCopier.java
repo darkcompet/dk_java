@@ -7,7 +7,7 @@ package tool.compet.reflection4j;
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
 import tool.compet.core4j.DkCaller3;
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 import tool.compet.core4j.DkUtils;
 
 import java.lang.annotation.Annotation;
@@ -61,7 +61,7 @@ public class DkObjCopier {
 		final int N = srcFieldMap.size();
 
 		if (N != dstFieldMap.size()) {
-			DkConsoleLogs.warning(DkObjCopier.class, "Different number of copy fields between %s(%d) vs %s(%d)",
+			DkLogs.warning(DkObjCopier.class, "Different number of copy fields between %s(%d) vs %s(%d)",
 				src.getClass().getName(), srcFields.size(), dst.getClass().getName(), dstFields.size());
 		}
 
@@ -89,7 +89,7 @@ public class DkObjCopier {
 					}
 				}
 				catch (Exception e) {
-					DkConsoleLogs.error(DkObjCopier.class, e);
+					DkLogs.error(DkObjCopier.class, e);
 					DkUtils.complainAt(DkObjCopier.class, "Could not copy field: %s.%s -> %s.%s",
 						src.getClass().getName(), srcField.getName(), dst.getClass().getName(), dstField.getName());
 				}

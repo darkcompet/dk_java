@@ -14,7 +14,7 @@ import tool.compet.core4j.DkCallable1;
  * @param <M> model-type of parent node
  * @param <N> model-type of child node
  */
-public class OwnMapStreamObservable<M, N> extends DkObservable<N, OwnMapStreamObservable> {
+public class OwnMapStreamObservable<M, N> extends TheObservableSourceImpl<N> {
 	private final DkObservableSource<M> parent;
 	private final DkCallable1<M, DkObservableSource<N>> converter;
 
@@ -25,6 +25,6 @@ public class OwnMapStreamObservable<M, N> extends DkObservable<N, OwnMapStreamOb
 
 	@Override
 	public void subscribeActual(DkObserver<N> child) throws Exception {
-		parent.subscribe(new OwnMapStreamObserver<>(child, converter));
+		parent.subscribe(new OwnFlatMapObserver<>(child, converter));
 	}
 }

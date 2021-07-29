@@ -5,7 +5,7 @@
 package tool.compet.stream4j;
 
 import tool.compet.core4j.BuildConfig;
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 
 import java.util.concurrent.*;
 
@@ -73,7 +73,7 @@ class MyIoScheduler<T> implements DkScheduler<T> {
 		boolean ok = future.cancel(mayInterruptIfRunning);
 
 		if (BuildConfig.DEBUG) {
-			DkConsoleLogs.info(this, "Cancelled task %s, result: %b", task.toString(), ok);
+			DkLogs.info(this, "Cancelled task %s, result: %b", task.toString(), ok);
 		}
 		if (ok) {
 			schedulingTasks.remove(task);
@@ -115,8 +115,8 @@ class MyIoScheduler<T> implements DkScheduler<T> {
 						active.call();
 					}
 					catch (Exception e) {
-						DkConsoleLogs.warning(this, "Error when run on serial-executor for task: " + active);
-						DkConsoleLogs.error(this, e);
+						DkLogs.warning(this, "Error when run on serial-executor for task: " + active);
+						DkLogs.error(this, e);
 					}
 					finally {
 						// Cleanup for this task and schedule next

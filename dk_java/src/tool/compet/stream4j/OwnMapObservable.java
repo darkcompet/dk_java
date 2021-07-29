@@ -9,9 +9,8 @@ import tool.compet.core4j.DkCallable1;
 /**
  * @param <M> model-type of upper node.
  * @param <N> model-type of lower node.
- * @param <T> subclass type.
  */
-public class OwnMapObservable<M, N, T extends DkObservableSource<N>> extends DkObservable<N, T> {
+public class OwnMapObservable<M, N> extends TheObservableSourceImpl<N> {
 	private final DkObservableSource<M> parent;
 	private final DkCallable1<M, N> converter;
 

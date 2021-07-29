@@ -6,7 +6,7 @@ package tool.compet.stream4j;
 
 import tool.compet.core4j.DkRunnable1;
 
-public class OwnOnSubscribeObservable<M> extends DkObservable<M, OwnOnSubscribeObservable> {
+public class OwnOnSubscribeObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkRunnable1<DkControllable> action;
 
 	public OwnOnSubscribeObservable(DkObservableSource<M> parent, DkRunnable1<DkControllable> action) {

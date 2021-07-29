@@ -4,6 +4,7 @@
 
 package tool.compet.core4j;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class DkArrays {
 	}
 
 	@SafeVarargs
+	@NonNull
 	public static <T> List<T> asList(@Nullable T... args) {
 		return (args == null || args.length == 0) ? new ArrayList<>() : Arrays.asList(args);
 	}

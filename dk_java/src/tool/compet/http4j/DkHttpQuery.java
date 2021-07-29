@@ -11,13 +11,13 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Use this to replace an element in the url that specified in RequestMethod (GET, POST...).
+ * Use this to form url with dynamic params.
  */
 @Target(ElementType.PARAMETER)
 @Retention(RUNTIME)
-public @interface DkUrlReplacement {
+public @interface DkHttpQuery {
 	/**
-	 * @return name which matches with some node on the url path.
+	 * @return name of parameter in query
 	 */
 	String value();
 }

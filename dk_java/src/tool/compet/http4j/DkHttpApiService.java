@@ -11,8 +11,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import tool.compet.core4j.BuildConfig;
-import tool.compet.core4j.DkConsoleLogs;
 import tool.compet.core4j.DkUtils;
 
 /**
@@ -22,7 +20,7 @@ import tool.compet.core4j.DkUtils;
  * <pre>
  *    // Create new instance of UserApi
  *    UserApi userApi = DkApiService.newIns()
- *       .configWith(App.getContext(), "server/server_darkcompet_apps.json")
+ *       .configWith(App.getContext(), "server/server_coresystem.json")
  *       .create(UserApi.class);
  *
  * 	// Now we can request to server via methods inside userApi
@@ -34,15 +32,15 @@ import tool.compet.core4j.DkUtils;
  * </pre>
  */
 @SuppressWarnings("unchecked")
-public class DkApiService<T extends DkApiService> {
+public class DkHttpApiService<T extends DkHttpApiService> {
 	protected String baseUrl;
 	protected String credential;
-	protected int connectTimeoutMillis;
-	protected int readTimeoutMillis;
+	protected int connectTimeoutMillis = 15_000; // 15s
+	protected int readTimeoutMillis = 30_000; // 30s
 
 	protected final SimpleArrayMap<Method, OwnServiceMethod> serviceMethods;
 
-	public DkApiService() {
+	public DkHttpApiService() {
 		serviceMethods = new ArrayMap<>();
 	}
 
@@ -99,70 +97,68 @@ public class DkApiService<T extends DkApiService> {
 
 	@SuppressWarnings("unchecked")
 	public <S> S create(Class<S> serviceClass) {
-		validateConfig();
+		validateAndShapingConfig();
 
+		// Create service object from given service class,
+		// And register handler on the service object to listen
+		// each invocation of methods.
 		InvocationHandler handler = (Object proxy, Method method, Object[] args) -> {
 			// Don't handle method which is not in service class
 			if (! method.getDeclaringClass().equals(serviceClass)) {
 				return method.invoke(proxy, args);
 			}
-
-			return callApi(method, args);
+			// Ok this is api call, execute HTTP request
+			return executeHttpRequest(method, args);
 		};
-
-		return (S) Proxy.newProxyInstance(serviceClass.getClassLoader(), new Class[]{serviceClass}, handler);
+		return (S) Proxy.newProxyInstance(serviceClass.getClassLoader(), new Class[] {serviceClass}, handler);
 	}
 
-	private void validateConfig() {
+	private void validateAndShapingConfig() {
 		if (baseUrl == null) {
 			DkUtils.complainAt(this, "Must specify non-null baseUrl");
 		}
-		if (!baseUrl.endsWith("/")) {
+		if (! baseUrl.endsWith("/")) {
 			baseUrl += '/';
 		}
 	}
 
-	private TheHttpResponse callApi(Method method, Object[] args) throws Exception {
-		// Create and cache service method
+	private TheHttpResponse executeHttpRequest(Method method, Object[] args) throws Exception {
+		// For each call of method, we need build HTTP request for it
+		// To avoid instantiate multiple times, we will try to cache own service method
 		OwnServiceMethod serviceMethod;
 
 		synchronized (serviceMethods) {
 			serviceMethod = serviceMethods.get(method);
-		}
 
-		if (serviceMethod == null) {
-			serviceMethod = new OwnServiceMethod(baseUrl, method);
-
-			synchronized (serviceMethods) {
+			// Because we cache this service method, so ONLY pass
+			// materials which is fixed (no change more) to it
+			if (serviceMethod == null) {
+				serviceMethod = new OwnServiceMethod(method);
 				serviceMethods.put(method, serviceMethod);
 			}
 		}
 
-		// Rebuild arguments of service method since args are dynamic
+		// Re-build materials of service method since parameter
+		// on the method maybe changed each time
+		String link;
 		String requestMethod;
+		SimpleArrayMap<String, String> headers;
 		byte[] body;
-		ArrayMap<String, String> headers = new ArrayMap<>();
-		String url;
-//		Class<?> responseClass;
 
 		synchronized (serviceMethod) {
-			serviceMethod.build(method, args);
+			// Note that this service method is cached, so we need pass
+			// every non-fixed materials to it (fixed materials can be ignored at this time)
+			serviceMethod.build(baseUrl, method, args);
 
-			requestMethod = serviceMethod.requestMethod;
-			body = serviceMethod.body;
-			headers.putAll(serviceMethod.headers);
-			url = serviceMethod.url;
-//			responseClass = serviceMethod.responseClass;
+			link = serviceMethod.link();
+			requestMethod = serviceMethod.requestMethod();
+			headers = serviceMethod.headers();
+			body = serviceMethod.body();
 		}
 
-		// Start request to server with parsed info
-		return startRequest(requestMethod, body, headers, url);
-	}
-
-	private TheHttpResponse startRequest(String requestMethod, byte[] body,
-		SimpleArrayMap<String, String> headers, String url) throws Exception {
-
-		DkHttpClient httpClient = new DkHttpClient(url)
+		// Ok this is time to execute HTTP request
+		// with own built service method
+		DkHttpClient httpClient = new DkHttpClient(link)
 			.setReadTimeout(readTimeoutMillis)
 			.setConnectTimeout(connectTimeoutMillis)
 			.setRequestMethod(requestMethod)
@@ -171,12 +167,7 @@ public class DkApiService<T extends DkApiService> {
 		if (credential != null) {
 			httpClient.addToHeader(DkHttpConst.AUTHORIZATION, credential);
 		}
-
 		httpClient.addAllToHeader(headers);
-
-		if (BuildConfig.DEBUG) {
-			DkConsoleLogs.info(this, "Network request at thread: %s", Thread.currentThread().toString());
-		}
 
 		return httpClient.execute();
 	}

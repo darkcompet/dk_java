@@ -7,7 +7,7 @@ package tool.compet.http4j;
 import androidx.collection.ArrayMap;
 import androidx.collection.SimpleArrayMap;
 import tool.compet.core4j.BuildConfig;
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 import tool.compet.core4j.DkUtils;
 
 import java.io.BufferedOutputStream;
@@ -27,7 +27,7 @@ import java.net.URL;
  *    Bitmap bitmap = httpResponse.body().bitmap();
  * </pre></code>
  *
- * @param <T> Subclass of this.
+ * @param <T> Subclass type.
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class DkHttpClient<T extends DkHttpClient> {
@@ -89,12 +89,14 @@ public class DkHttpClient<T extends DkHttpClient> {
 			throw new RuntimeException("Must provide url");
 		}
 		if (BuildConfig.DEBUG) {
-			DkConsoleLogs.info(this, "Start request with link: %s", link);
+			DkLogs.info(this, "Execute HTTP %s-request with link: %s, thread: %s, headers: %s", requestMethod, link, Thread.currentThread().getName(), headers.toString());
 		}
 		final URL url = new URL(link);
 		final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		final TheHttpResponse response = new TheHttpResponse(connection);
 
+		// Apply headers to connection
+		// For eg,. Content-Type (json),...
 		for (int index = headers.size() - 1; index >= 0; --index) {
 			connection.setRequestProperty(headers.keyAt(index), headers.valueAt(index));
 		}
@@ -103,6 +105,7 @@ public class DkHttpClient<T extends DkHttpClient> {
 		connection.setRequestMethod(requestMethod);
 		connection.setDoInput(true);
 
+		// Perform with request method (get, post,...)
 		if (DkHttpConst.GET.equals(requestMethod)) {
 			doGet(connection);
 		}
@@ -113,18 +116,25 @@ public class DkHttpClient<T extends DkHttpClient> {
 			DkUtils.complainAt(this, "Invalid request method: " + requestMethod);
 		}
 
+		// We return response without decoding result
+		// since we don't have converter to do that
 		return response;
 	}
 
-	protected void doGet(HttpURLConnection conn) throws Exception {
-		// nothing to do now
+	protected void doGet(HttpURLConnection connection) throws Exception {
+		if (BuildConfig.DEBUG) {
+			DkLogs.info(this, "Perform GET request");
+		}
 	}
 
-	protected void doPost(HttpURLConnection conn) throws Exception {
+	protected void doPost(HttpURLConnection connection) throws Exception {
+		if (BuildConfig.DEBUG) {
+			DkLogs.info(this, "Perform POST request. Body length: " + (body == null ? 0 : body.length));
+		}
 		if (body != null) {
-			conn.setDoOutput(true);
+			connection.setDoOutput(true);
 			// Write full post data to body
-			BufferedOutputStream os = new BufferedOutputStream(conn.getOutputStream());
+			BufferedOutputStream os = new BufferedOutputStream(connection.getOutputStream());
 			os.write(body);
 			os.close();
 		}

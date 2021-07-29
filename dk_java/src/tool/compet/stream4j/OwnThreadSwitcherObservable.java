@@ -13,7 +13,7 @@ import tool.compet.core4j.DkRunnable1;
 /**
  * Normally, switch thread, run in main thread instead of IO thread.
  */
-public class OwnThreadSwitcherObservable<M> extends DkObservable<M, OwnThreadSwitcherObservable> {
+public class OwnThreadSwitcherObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkScheduler<M> scheduler;
 	@Nullable private final DkRunnable1<M> action;
 	private final long delay;
@@ -26,7 +26,7 @@ public class OwnThreadSwitcherObservable<M> extends DkObservable<M, OwnThreadSwi
 		long delay, TimeUnit timeUnit,
 		boolean isSerial
 	) {
-		super(parent);
+		this.parent = parent;
 		this.scheduler = scheduler;
 		this.action = action;
 		this.delay = delay;

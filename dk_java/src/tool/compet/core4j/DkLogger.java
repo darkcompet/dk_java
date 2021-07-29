@@ -10,16 +10,37 @@ import java.util.ArrayList;
 
 public class DkLogger {
 	public interface LogType {
-		String TYPE_DEBUG = "debug";
-		String TYPE_INFO = "info";
-		String TYPE_NOTICE = "notice";
-		String TYPE_WARNING = "warning";
-		String TYPE_ERROR = "error";
-		String TYPE_EMERGENCY = "emergency";
+		int TYPE_DEBUG = 1;
+		int TYPE_INFO = 2;
+		int TYPE_NOTICE = 3;
+		int TYPE_WARNING = 4;
+		int TYPE_ERROR = 5;
+		int TYPE_CRITICAL = 6;
+		int TYPE_EMERGENCY = 7;
+
+		static String name(int type) {
+			switch (type) {
+				case LogType.TYPE_DEBUG:
+					return "debug";
+				case LogType.TYPE_INFO:
+					return "info";
+				case LogType.TYPE_NOTICE:
+					return "notice";
+				case LogType.TYPE_WARNING:
+					return "warning";
+				case LogType.TYPE_ERROR:
+					return "error";
+				case LogType.TYPE_CRITICAL:
+					return "critical";
+				case LogType.TYPE_EMERGENCY:
+					return "emergency";
+			}
+			throw new RuntimeException("Invali type: " + type);
+		}
 	}
 
 	public interface LogAdapter {
-		void log(String logType, String message);
+		void log(int logType, String message);
 	}
 
 	// Log adapter for actual log
@@ -83,6 +104,13 @@ public class DkLogger {
 	}
 
 	/**
+	 * Log critical.
+	 */
+	public void critical(@Nullable Object where, @Nullable String format, Object... args) {
+		log(LogType.TYPE_CRITICAL, where, format, args);
+	}
+
+	/**
 	 * Log emergency.
 	 */
 	public void emergency(@Nullable Object where, @Nullable String format, Object... args) {
@@ -92,18 +120,27 @@ public class DkLogger {
 	// region: Protected
 
 	protected String makePrefix(@Nullable Object where) {
-		String prefix = "~ ";
+		String result = "~ ";
 
 		if (where != null) {
-			String loc = where instanceof Class ? ((Class) where).getName() : where.getClass().getName();
-			loc = loc.substring(loc.lastIndexOf('.') + 1);
-			prefix = loc + prefix;
+			String loc;
+			if (where instanceof String) {
+				loc = (String) where;
+			}
+			else if (where instanceof Class) {
+				loc = ((Class) where).getSimpleName();
+				loc = loc.substring(loc.lastIndexOf('.') + 1);
+			}
+			else {
+				loc = where.getClass().getSimpleName();
+			}
+			result = loc + result;
 		}
 
-		return prefix;
+		return result;
 	}
 
-	protected void log(String logType, @Nullable Object where, @Nullable String format, Object... args) {
+	protected void log(int logType, @Nullable Object where, @Nullable String format, Object... args) {
 		String message = format;
 		if (args != null && args.length > 0) {
 			message = DkStrings.format(format, args);

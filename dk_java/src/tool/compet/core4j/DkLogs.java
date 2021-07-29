@@ -10,45 +10,48 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 /**
- * System console log. It also provide log-callback, benchmark...
+ * System console standard log. It also provide log-callback, benchmark...
+ * This log does work in standard console which is runnable when testing,
+ * so we choose it as default log instead of Android Logcat.
  */
-public class DkConsoleLogs implements DkLogger.LogType {
-	private static final DkLogger logger = new DkLogger(DkConsoleLogs::logActual);
+public class DkLogs implements DkLogger.LogType {
+	private static final DkLogger logger = new DkLogger(DkLogs::logActual);
 
 	// Enable this to log back trace of current thread
 	public static boolean logBackTrace;
-	public static DkRunner2<String, String> logCallback;
+	public static DkRunner2<Integer, String> logCallback; // logType vs logMessage
 
 	// For benchmark
 	private static long benchmarkStartTime;
 	private static ArrayDeque<String> benchmarkTaskNames;
 
 	/**
+	 * Log for test, don't use at app or libraries.
+	 */
+	public static void test(@Nullable Object where, @Nullable String format, Object... args) {
+		System.out.println(logger.makePrefix(where) + DkStrings.format(format, args));
+	}
+
+	/**
 	 * Debug log. Only run at debug env (ignored at production env).
 	 * Notice: should remove all debug code when release.
 	 */
 	public static void debug(@Nullable Object where, @Nullable String format, Object... args) {
-		if (BuildConfig.DEBUG) {
-			logger.debug(where, format, args);
-		}
+		logger.debug(where, format, args);
 	}
 
 	/**
 	 * Log info. Only run at debug env (ignored at production env).
 	 */
 	public static void info(@Nullable Object where, @Nullable String format, Object... args) {
-		if (BuildConfig.DEBUG) {
-			logger.info(where, format, args);
-		}
+		logger.info(where, format, args);
 	}
 
 	/**
 	 * Log notice. Only run at debug env (ignored at production env).
 	 */
 	public static void notice(@Nullable Object where, @Nullable String format, Object... args) {
-		if (BuildConfig.DEBUG) {
-			logger.notice(where, format, args);
-		}
+		logger.notice(where, format, args);
 	}
 
 	/**
@@ -80,6 +83,20 @@ public class DkConsoleLogs implements DkLogger.LogType {
 	}
 
 	/**
+	 * Critical log. Run at both debug and production env.
+	 */
+	public static void critical(@Nullable Object where, @Nullable String format, Object... args) {
+		logger.critical(where, format, args);
+	}
+
+	/**
+	 * Emergency log. Run at both debug and production env.
+	 */
+	public static void emergency(@Nullable Object where, @Nullable String format, Object... args) {
+		logger.emergency(where, format, args);
+	}
+
+	/**
 	 * Start benchmark. Only run at debug env (ignored at production env).
 	 */
 	public static void tick(@Nullable Object where, String task) {
@@ -108,7 +125,7 @@ public class DkConsoleLogs implements DkLogger.LogType {
 		}
 	}
 
-	private static void logActual(String logType, String message) {
+	private static void logActual(int logType, String message) {
 		if (logBackTrace) {
 			ArrayList<String> descriptions = new ArrayList<>();
 			for (StackTraceElement elm : Thread.currentThread().getStackTrace()) {
@@ -119,17 +136,20 @@ public class DkConsoleLogs implements DkLogger.LogType {
 			message += "\nStack Trace:\n" + trace;
 		}
 
+		String logName = DkLogger.LogType.name(logType);
+
 		switch (logType) {
 			case TYPE_DEBUG:
 			case TYPE_INFO:
 			case TYPE_NOTICE: {
-				System.out.println("xxx_" + logType + ": " + message);
+				System.out.println("xxx_" + logName + ": " + message);
 				break;
 			}
 			case TYPE_WARNING:
 			case TYPE_ERROR:
+			case TYPE_CRITICAL:
 			case TYPE_EMERGENCY: {
-				System.err.println("xxx_" + logType + ": " + message);
+				System.err.println("xxx_" + logName + ": " + message);
 				break;
 			}
 		}

@@ -10,7 +10,7 @@ import tool.compet.core4j.DkCallable;
  * God observable node.
  * When start, this run callable and then handle next events.
  */
-class MyGodCallableObservable<M> extends DkObservable<M, MyGodCallableObservable> {
+class MyGodCallableObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkCallable<M> execution;
 
 	MyGodCallableObservable(DkCallable<M> execution) {

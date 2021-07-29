@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Target({METHOD, PARAMETER})
 @Retention(RUNTIME)
-public @interface DkHeader {
+public @interface DkHttpHeaderEntry {
 	/**
 	 * @return key of property in header.
 	 */

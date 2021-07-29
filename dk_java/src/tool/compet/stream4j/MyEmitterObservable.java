@@ -8,7 +8,7 @@ package tool.compet.stream4j;
  * Observerの関数の呼び出しを自由に管理したい場合、このクラスを利用して頂ければ、
  * Observerを渡しますので、イベントの処理を完全に支配できます。
  */
-class MyEmitterObservable<M> extends DkObservable<M, MyEmitterObservable> {
+class MyEmitterObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkEmitter<M> emitter;
 
 	MyEmitterObservable(DkEmitter<M> emitter) {

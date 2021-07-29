@@ -4,8 +4,6 @@
 
 package tool.compet.stream4j;
 
-import androidx.annotation.NonNull;
-
 import java.util.concurrent.TimeUnit;
 
 import tool.compet.core4j.DkCallable1;
@@ -13,127 +11,91 @@ import tool.compet.core4j.DkRunnable;
 import tool.compet.core4j.DkRunnable1;
 
 /**
- * This works like RxJava or Java stream.
- * Refer: https://github.com/ReactiveX/RxJava/
+ * This provides chained-method calling, called as stream or callback-system.
+ * For detail, refer to RxJava or Java stream at https://github.com/ReactiveX/RxJava
  *
- * M: model which be passed down to child node
+ * @param <M> Model which be passed down from parent node to child node.
  */
 @SuppressWarnings("unchecked")
-public abstract class DkObservable<M, T extends DkObservableSource> implements DkObservableSource<M> {
-	protected DkObservableSource<M> parent;
-	protected DkObservableSource<M> current;
-
+public abstract class DkObservable<M> extends TheObservableSourceImpl<M> {
+	// Don't public
 	protected DkObservable() {
 	}
 
+	// Don't public
 	protected DkObservable(DkObservableSource<M> parent) {
 		this.parent = parent;
 	}
-	
-	// region Basic instance creator
 
 	/**
-	 * Its useful if you wanna customize emitting-logic like onNext(), onError()... in #DkObserver to children.
-	 * Note that, you must implement logic to call #onFinal() in observer.
+	 * This map is used to switch model type.
 	 */
-//	public static <M> DkObservable<M> fromEmitter(DkEmitter<M> emitter) {
-//		return new MyEmitterObservable<M>(emitter);
-//	}
-
-	/**
-	 * Make an execution without input, then pass result to lower node. Note that, you can cancel
-	 * execution of running thread but cannot control (cancel, pause, resume...) it deeply.
-	 * To overcome this, just use #withControllable() instead.
-	 */
-//	public static <M> DkObservable<M> fromCallable(DkCallable<M> execution) {
-//		return new MyGodCallableObservable<>(execution);
-//	}
-
-	/**
-	 * Its useful if you wanna control (pause, resume, cancel...) state of the task.
-	 */
-//	public static <M> DkObservable<M> fromControllable(DkControllable<M> task) {
-//		return new MyGodControllableObservable<>(task);
-//	}
-
-	/**
-	 * Use it if you just wanna send item to children.
-	 */
-//	public static <M, T extends TheObservable<M>> DkObservable<M, T> from(M item) {
-//		return new MyGodArrayObservable<>(item);
-//	}
-
-	/**
-	 * Use it if you just wanna send item to children.
-	 */
-//	public static <M> DkObservable<M> from(M[] items) {
-//		return new MyGodArrayObservable<>(items);
-//	}
-
-	/**
-	 * Use it if you just wanna send item to children.
-	 */
-//	public static <M> DkObservable<M> from(Iterable<M> items) {
-//		return new MyGodIterableObservable<>(items);
-//	}
-
-	// endregion Basic instance creator
-
-	public <N, TN extends DkObservableSource<N>> TN jmap(DkCallable1<M, N> function) {
-		current = ((DkObservableSource<M>) new OwnMapObservable<>(current, function));
-		return (TN) this;
+	public <N> DkObservable<N> map(DkCallable1<M, N> function) {
+		tail = ((DkObservableSource<M>) new OwnMapObservable<>(tail, function));
+		return (DkObservable<N>) this;
 	}
 
-	public <N, TN extends DkObservableSource<N>> TN jmapStream(DkCallable1<M, DkObservableSource<N>> function) {
-		current = ((DkObservableSource<M>) new OwnMapStreamObservable<>(current, function));
-		return (TN) this;
+	/**
+	 * This switched model type, is like with `map()`, but this maps with other stream.
+	 */
+	public <N> DkObservable<N> flatMap(DkCallable1<M, DkObservableSource<N>> function) {
+		tail = ((DkObservableSource<M>) new OwnMapStreamObservable<>(tail, function));
+		return (DkObservable<N>) this;
 	}
 
-	public T ignoreError() {
-		current = new OwnIgnoreErrorObservable<>(current);
-		return (T) this;
+	public DkObservable<M> ignoreError() {
+		tail = new OwnIgnoreErrorObservable<>(tail);
+		return this;
 	}
 
-	public T scheduleInBackground() {
+	public abstract DkObservable<M> delay(long duration);
+
+	public abstract DkObservable<M> delay(long duration, TimeUnit unit);
+
+	public DkObservable<M> scheduleInBackground() {
 		return scheduleIn(DkSchedulers.io(), 0, TimeUnit.MILLISECONDS, false);
 	}
 
-	public T scheduleIn(DkScheduler<M> scheduler) {
+	public DkObservable<M> scheduleIn(DkScheduler<M> scheduler) {
 		return scheduleIn(scheduler, 0, TimeUnit.MILLISECONDS, false);
 	}
 
-	public T scheduleIn(DkScheduler<M> scheduler, boolean isSerial) {
+	public DkObservable<M> scheduleIn(DkScheduler<M> scheduler, boolean isSerial) {
 		return scheduleIn(scheduler, 0, TimeUnit.MILLISECONDS, isSerial);
 	}
 
-	public T scheduleIn(DkScheduler<M> scheduler, long delay, TimeUnit unit, boolean isSerial) {
-		current = new OwnScheduleInObservable<>(current, scheduler, delay, unit, isSerial);
-		return (T) this;
+	public DkObservable<M> scheduleIn(DkScheduler<M> scheduler, long delay, TimeUnit unit, boolean isSerial) {
+		tail = new OwnScheduleInObservable<>(tail, scheduler, delay, unit, isSerial);
+		return this;
 	}
 
-	public T observeOn(DkScheduler<M> scheduler) {
+	public DkObservable<M> observeOn(DkScheduler<M> scheduler) {
 		return observeOn(scheduler, 0L, TimeUnit.MILLISECONDS, true);
 	}
 
-	public T observeOn(DkScheduler<M> scheduler, long delayMillis) {
+	public DkObservable<M> observeOn(DkScheduler<M> scheduler, long delayMillis) {
 		return observeOn(scheduler, delayMillis, TimeUnit.MILLISECONDS, true);
 	}
 
-	public T observeOn(DkScheduler<M> scheduler, long delay, TimeUnit unit, boolean isSerial) {
-		current = new OwnThreadSwitcherObservable<>(current, scheduler, null, delay, unit, isSerial);
-		return (T) this;
+	public DkObservable<M> observeOn(DkScheduler<M> scheduler, long delay, TimeUnit unit, boolean isSerial) {
+		tail = new OwnThreadSwitcherObservable<>(tail, scheduler, null, delay, unit, isSerial);
+		return this;
 	}
 
-	public T switchThread(DkScheduler<M> scheduler, DkRunnable1<M> action) {
+	public abstract DkObservable<M> observeOnForeground();
+
+	public abstract DkObservable<M> scheduleInBackgroundAndObserveOnForeground();
+
+	public DkObservable<M> switchThread(DkScheduler<M> scheduler, DkRunnable1<M> action) {
 		return switchThread(scheduler, action, 0, TimeUnit.MILLISECONDS, true);
 	}
 
 	/**
 	 * Make flow run in other thread, this is thread-switching.
 	 */
-	public T switchThread(DkScheduler<M> scheduler, DkRunnable1<M> action, long delay, TimeUnit unit, boolean isSerial) {
-		current = new OwnThreadSwitcherObservable<>(current, scheduler, action, delay, unit, isSerial);
-		return (T) this;
+	public DkObservable<M> switchThread(DkScheduler<M> scheduler, DkRunnable1<M> action, long delay, TimeUnit unit, boolean isSerial) {
+		tail = new OwnThreadSwitcherObservable<>(tail, scheduler, action, delay, unit, isSerial);
+		return this;
 	}
 
 	/**
@@ -141,9 +103,9 @@ public abstract class DkObservable<M, T extends DkObservableSource> implements D
 	 * stream-events easier when subscribing, so equivalent to #subscribe(observer),
 	 * this function does not affect flow of current stream even if action throws exception.
 	 */
-	public T doOnSubscribe(DkRunnable1<DkControllable> action) {
-		current = new OwnOnSubscribeObservable<>(current, action);
-		return (T) this;
+	public DkObservable<M> doOnSubscribe(DkRunnable1<DkControllable> action) {
+		tail = new OwnOnSubscribeObservable<>(tail, action);
+		return this;
 	}
 
 	/**
@@ -151,9 +113,9 @@ public abstract class DkObservable<M, T extends DkObservableSource> implements D
 	 * stream-events easier when subscribing, so equivalent to #subscribe(observer),
 	 * this function does not affect flow of current stream even if action throws exception.
 	 */
-	public T doOnNext(DkRunnable1<M> action) {
-		current = new OwnOnNextObservable<>(current, action);
-		return (T) this;
+	public DkObservable<M> doOnNext(DkRunnable1<M> action) {
+		tail = new OwnOnNextObservable<>(tail, action);
+		return this;
 	}
 
 	/**
@@ -161,9 +123,9 @@ public abstract class DkObservable<M, T extends DkObservableSource> implements D
 	 * stream-events easier when subscribing, so equivalent to #subscribe(observer),
 	 * this function does not affect flow of current stream even if action throws exception.
 	 */
-	public T doOnError(DkRunnable1<Throwable> action) {
-		current = new OwnOnErrorObservable<>(current, action);
-		return (T) this;
+	public DkObservable<M> doOnError(DkRunnable1<Throwable> action) {
+		tail = new OwnOnErrorObservable<>(tail, action);
+		return this;
 	}
 
 	/**
@@ -171,9 +133,9 @@ public abstract class DkObservable<M, T extends DkObservableSource> implements D
 	 * stream-events easier when subscribing, so equivalent to #subscribe(observer),
 	 * this function does not affect flow of current stream even if action throws exception.
 	 */
-	public T doOnComplete(DkRunnable action) {
-		current = new OwnOnCompleteObservable<>(current, action);
-		return (T) this;
+	public DkObservable<M> doOnComplete(DkRunnable action) {
+		tail = new OwnOnCompleteObservable<>(tail, action);
+		return this;
 	}
 
 	/**
@@ -181,9 +143,9 @@ public abstract class DkObservable<M, T extends DkObservableSource> implements D
 	 * stream-events easier when subscribing, so equivalent to #subscribe(observer),
 	 * this function does not affect flow of current stream even if action throws exception.
 	 */
-	public T doOnFinal(DkRunnable action) {
-		current = new OwnOnFinalObservable<>(current, action);
-		return (T) this;
+	public DkObservable<M> doOnFinal(DkRunnable action) {
+		tail = new OwnOnFinalObservable<>(tail, action);
+		return this;
 	}
 
 	public void subscribeAsync() {
@@ -203,40 +165,5 @@ public abstract class DkObservable<M, T extends DkObservableSource> implements D
 		DkControllable<M> controllable = new DkControllable<>(observer);
 		subscribe(controllable);
 		return controllable;
-	}
-
-	/**
-	 * Subscribe with empty (leaf) observer (listener, callback) to stream.
-	 */
-	@Override
-	public void subscribe() {
-		subscribe(new OwnLeafObserver<>());
-	}
-
-	/**
-	 * Subscribe with an observer (listener, callback) to stream, we can listen what happen in the stream.
-	 *
-	 * @param observer For first time, this is object passed from caller. Next, we wrap it to own observer
-	 *                 and pass up to parent node.
-	 */
-	@Override
-	public void subscribe(@NonNull DkObserver<M> observer) {
-		try {
-			// Go up to send observer (normally wrapped observer) of this node to parent node,
-			// by do it, we can make linked list of observers, so parent can pass events to this node later.
-			if (current == null) { // current: lowest node, we are not in God node
-				subscribeActual(observer);
-			}
-			else { // current: lowest node but we are in God node
-				current.subscribeActual(observer);
-				current = null;
-			}
-		}
-		catch (Exception e) {
-			// Unable to subscribe (make node-link process), just pass error and then final events
-			// to child observer
-			observer.onError(e);
-			observer.onFinal();
-		}
 	}
 }

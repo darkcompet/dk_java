@@ -11,9 +11,9 @@ package tool.compet.stream4j;
  * To resolve this, we introduce this node to switch to `onNext()` at `onError()` event.
  * So child node
  */
-public class OwnIgnoreErrorObservable<M> extends DkObservable<M, OwnIgnoreErrorObservable> {
+public class OwnIgnoreErrorObservable<M> extends TheObservableSourceImpl<M> {
 	public OwnIgnoreErrorObservable(DkObservableSource<M> parent) {
-		super(parent);
+		this.parent = parent;
 	}
 
 	@Override

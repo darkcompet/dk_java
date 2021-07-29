@@ -16,7 +16,7 @@ import java.lang.reflect.Type;
  */
 public class DkReflections {
 	/**
-	 * Get class type from given class name.
+	 * Get class from given class name.
 	 *
 	 * @param className Path to class, for eg,. {@code "java.lang.String", "tool.core.reflection.DkReflections"}.
 	 * @return Class which represents for given name if succeed. Otherwise return null.
@@ -135,7 +135,7 @@ public class DkReflections {
 			return field.get(null);
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(DkReflections.class, e);
+			DkLogs.error(DkReflections.class, e);
 		}
 		return DkConst.UID_OBJ;
 	}

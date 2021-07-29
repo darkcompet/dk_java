@@ -10,7 +10,7 @@ import java.util.Collections;
 /**
  * God observable node.
  */
-class MyGodArrayObservable<M> extends DkObservable<M, MyGodArrayObservable> {
+class MyGodArrayObservable<M> extends TheObservableSourceImpl<M> {
 	private final Iterable<M> items;
 
 	MyGodArrayObservable(M item) {

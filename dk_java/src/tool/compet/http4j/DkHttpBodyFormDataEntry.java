@@ -11,11 +11,15 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Use it for body in parameters of the method. The body is url encoded form data,
- * as key-value pairs, will be converted to bytes of k1=v1&k2=v2.... before sent to server.
+ * Use this annotation on params of the method.
+ * When request with POST method, we will convert all body entries
+ * to format `k1=v1&k2=v2...` and send it as bytes to server after headers.
  */
 @Target(PARAMETER)
 @Retention(RUNTIME)
-public @interface DkUrlEncoded {
+public @interface DkHttpBodyFormDataEntry {
+	/**
+	 * @return Name of form-data entry.
+	 */
 	String value();
 }

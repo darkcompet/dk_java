@@ -12,7 +12,10 @@ import java.util.concurrent.Callable;
  * @param <M> model-type of upper stream
  * @param <N> model-type of lower stream
  */
-public abstract class OwnBaseMapStreamObserver<M, N> extends OwnControllable implements Callable<N>, DkObserver<M> {
+public abstract class OwnBaseMapStreamObserver<M, N>
+	extends OwnControllable
+	implements Callable<N>, DkObserver<M> {
+
 	protected DkObserver<N> child;
 
 	protected OwnBaseMapStreamObserver(DkObserver<N> child) {

@@ -11,18 +11,18 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Use this for GET request method.
+ * Attach this to a method to make with POST request method.
  */
 @Target(METHOD)
 @Retention(RUNTIME)
-public @interface DkGet {
+public @interface DkHttpPostRequest {
 	/**
-	 * @return relative url of api
+	 * @return relative url of api, for eg,. user/1/profile
 	 */
 	String value();
 
 	/**
-	 * @return output format
+	 * @return Post data format, for eg,. application/json
 	 */
-	String responseFormat() default DkHttpConst.APPLICATION_JSON;
+	String contentType() default DkHttpConst.APPLICATION_JSON;
 }

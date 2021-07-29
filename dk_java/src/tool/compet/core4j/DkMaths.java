@@ -35,11 +35,11 @@ public class DkMaths {
 		while (index < N && text.charAt(index) == '-') {
 			++index;
 		}
-		boolean minus = ((index & 1) == 1);
+		boolean minus = ((index & 1) == 1); // index is odd number
 		char ch;
 
 		while (index < N && '0' <= (ch = text.charAt(index++)) && ch <= '9') {
-			result = (result << 3) + (result << 1) + (ch - '0');
+			result = (result << 3) + (result << 1) + (ch - '0'); // 10x + d
 		}
 		return minus ? -result : result;
 	}

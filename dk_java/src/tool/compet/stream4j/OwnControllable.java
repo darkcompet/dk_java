@@ -5,7 +5,7 @@
 package tool.compet.stream4j;
 
 import tool.compet.core4j.BuildConfig;
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 
 /**
  * Controllable observer which user can use it to cancel, resume, pause... current stream any time.
@@ -81,7 +81,7 @@ public abstract class OwnControllable {
 		}
 
 		if (BuildConfig.DEBUG) {
-			DkConsoleLogs.info(this, "Cancelled with mayInterruptThread %b inside parent with result %b",
+			DkLogs.info(this, "Cancelled with mayInterruptThread %b inside parent with result %b",
 				mayInterruptThread, ok);
 		}
 

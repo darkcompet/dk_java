@@ -22,7 +22,7 @@ public class TheHttpResponse {
 	protected String message;
 
 	// Content from server
-	protected TheResponseBody body;
+	protected TheHttpResponseBody body;
 
 	protected TheHttpResponse(HttpURLConnection connection) {
 		this.connection = connection;
@@ -43,7 +43,7 @@ public class TheHttpResponse {
 		return message != null ? message : (message = connection.getResponseMessage());
 	}
 
-	public TheResponseBody body() {
-		return body != null ? body : (body = new TheResponseBody(connection));
+	public TheHttpResponseBody body() {
+		return body != null ? body : (body = new TheHttpResponseBody(connection));
 	}
 }

@@ -7,7 +7,7 @@ package tool.compet.http4j;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DkServer {
+public class DkHttpServerConfig {
 	@Expose
 	@SerializedName("baseUrl")
 	public String baseUrl;

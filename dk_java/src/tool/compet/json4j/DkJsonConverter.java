@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tool.compet.core4j.DkDateTimeConst;
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 
 /**
  * Dependency: com.google.code.gson:gson:2.8.6
@@ -39,7 +39,7 @@ public class DkJsonConverter {
 			return gson.fromJson(json, classOfT);
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(this, e);
+			DkLogs.error(this, e);
 		}
 		return null;
 	}

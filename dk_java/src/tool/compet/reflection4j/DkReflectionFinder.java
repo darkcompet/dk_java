@@ -6,13 +6,17 @@ package tool.compet.reflection4j;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
+import androidx.collection.ArraySet;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import tool.compet.core4j.DkArrays;
 
 /**
  * Find fields or methods which annotated with specified annotations in class.
@@ -25,13 +29,10 @@ public class DkReflectionFinder {
 	protected final Map<String, List<Method>> methodCache;
 
 	// For reset search packages at runtime
-	protected final String[] searchPrefixPackages;
+	protected final Collection<String> prefixSearchPackages = new ArraySet<>();
 
-	public DkReflectionFinder(String... searchPrefixPackages) {
-		if (searchPrefixPackages == null || searchPrefixPackages.length == 0) {
-			throw new RuntimeException("Search prefix packages cannot be empty");
-		}
-		this.searchPrefixPackages = searchPrefixPackages;
+	public DkReflectionFinder(String... prefixSearchPackages) {
+		this.prefixSearchPackages.addAll(DkArrays.asList(prefixSearchPackages));
 		this.fieldCache = new ArrayMap<>();
 		this.methodCache = new ArrayMap<>();
 	}
@@ -39,6 +40,11 @@ public class DkReflectionFinder {
 	public static void install(String... prefixSearchPackages) {
 		if (INS == null) {
 			INS = new DkReflectionFinder(prefixSearchPackages);
+		}
+		// Also upsert `searchPrefixPackages` since caller maybe call multiple places
+		// and at subclass and at superclass
+		if (prefixSearchPackages != null) {
+			INS.prefixSearchPackages.addAll(DkArrays.asList(prefixSearchPackages));
 		}
 	}
 
@@ -83,7 +89,7 @@ public class DkReflectionFinder {
 
 		// Not found in cache, start search and cache
 		fields = new MyFinder()
-			.findFields(clazz, Collections.singletonList(annotation), upSuper, searchPrefixPackages)
+			.findFields(clazz, Collections.singletonList(annotation), upSuper, prefixSearchPackages)
 			.get(annotation);
 
 		if (fields == null) {
@@ -130,7 +136,7 @@ public class DkReflectionFinder {
 
 		// Not found in cache, start search
 		methods = new MyFinder()
-			.findMethods(clazz, Collections.singletonList(annotation), upSuper, searchPrefixPackages)
+			.findMethods(clazz, Collections.singletonList(annotation), upSuper, prefixSearchPackages)
 			.get(annotation);
 
 		if (methods == null) {

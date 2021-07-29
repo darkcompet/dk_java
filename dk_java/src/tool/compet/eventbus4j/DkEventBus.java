@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 import tool.compet.core4j.DkIntObjectArrayMap;
 import tool.compet.reflection4j.DkReflectionFinder;
 
@@ -366,7 +366,7 @@ public class DkEventBus<T> {
 				subscription.invoke(eventData);
 			}
 			catch (Exception e) {
-				DkConsoleLogs.error(this, e);
+				DkLogs.error(this, e);
 			}
 		}
 	}

@@ -4,7 +4,7 @@
 
 package tool.compet.stream4j;
 
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 import tool.compet.core4j.DkRunnable;
 
 public class OwnOnFinalObserver<M> extends OwnObserver<M> {
@@ -23,7 +23,7 @@ public class OwnOnFinalObserver<M> extends OwnObserver<M> {
 			action.run();
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(this, e);
+			DkLogs.error(this, e);
 		}
 		finally {
 			child.onFinal();

@@ -11,6 +11,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ class MyFinder {
 		Class clazz,
 		Iterable<Class<? extends Annotation>> annotations,
 		boolean upSuper,
-		String[] searchPackages) {
+		Collection<String> searchPackages) {
 
 		Map<Class<? extends Annotation>, List<Field>> result = new ArrayMap<>();
 
@@ -67,7 +68,7 @@ class MyFinder {
 		Class clazz,
 		Iterable<Class<? extends Annotation>> annotations,
 		boolean upSuper,
-		String[] searchPackages) {
+		Collection<String> searchPackages) {
 
 		Map<Class<? extends Annotation>, List<Method>> result = new ArrayMap<>();
 
@@ -137,7 +138,7 @@ class MyFinder {
 	/**
 	 * Check whether #clazz is inside #packages.
 	 */
-	private boolean isValidTarget(Class clazz, String[] packages) {
+	private boolean isValidTarget(Class clazz, Collection<String> packages) {
 		if (packages != null) {
 			String name = clazz.getName();
 

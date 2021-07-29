@@ -21,6 +21,7 @@ public interface DkHttpConst {
 
 	// Content Format
 	String CONTENT_TYPE = "Content-Type";
+	String ACCEPT = "Accept";
 	String APPLICATION_JSON = "application/json";
 	String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
 }

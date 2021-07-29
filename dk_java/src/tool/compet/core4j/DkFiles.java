@@ -90,14 +90,14 @@ public class DkFiles {
 		return file.delete();
 	}
 
-	public static void store(String utf8Chars, String filePath, boolean append) throws IOException {
-		store(utf8Chars == null ? "".getBytes() : utf8Chars.getBytes(), filePath, append);
+	public static void save(String utf8Chars, String filePath, boolean append) throws IOException {
+		save(utf8Chars == null ? "".getBytes() : utf8Chars.getBytes(), filePath, append);
 	}
 
 	/**
-	 * Save data to the file.
+	 * Save (write) data to the file.
 	 */
-	public static void store(byte[] data, String filePath, boolean append) throws IOException {
+	public static void save(byte[] data, String filePath, boolean append) throws IOException {
 		createFile(filePath);
 
 		OutputStream os = new FileOutputStream(filePath, append);
@@ -105,6 +105,9 @@ public class DkFiles {
 		os.close();
 	}
 
+	/**
+	 * Load (read) data from given file.
+	 */
 	public static String loadAsString(String filePath) throws IOException {
 		createFile(filePath);
 
@@ -121,6 +124,9 @@ public class DkFiles {
 		return sb.toString();
 	}
 
+	/**
+	 * Load (read) data as UTF-8 from given file.
+	 */
 	public static List<String> loadAsUtf8Lines(File file) throws Exception {
 		List<String> lines = new ArrayList<>();
 		BufferedReader reader = newUtf8Reader(file);
@@ -136,6 +142,8 @@ public class DkFiles {
 	}
 
 	/**
+	 * Load (read) data from given file and result as byte[].
+	 *
 	 * @return Null if file not found. Otherwise byte array.
 	 */
 	public static byte[] loadAsBytes(String filePath) {
@@ -151,6 +159,8 @@ public class DkFiles {
 	}
 
 	/**
+	 * Load (read) data from given file.
+	 *
 	 * @return Null if file not found. Otherwise byte array.
 	 */
 	public static byte[] loadAsBytes(InputStream is) {
@@ -202,14 +212,14 @@ public class DkFiles {
 	}
 
 	/**
-	 * @param file a file, eg,. welcome.bk.txt
-	 * @return name of this file without extension, eg,. welcome.bk
+	 * @param file A file, for eg,. welcome.bk.txt
+	 * @return Name of this file without extension, for eg,. welcome.bk
 	 */
 	public static String filename(File file) {
-		String name = file.getName();
-		int endIndex = name.lastIndexOf(".");
+		String fileName = file.getName();
+		int endIndex = fileName.lastIndexOf(".");
 
-		return endIndex < 0 ? name : name.substring(0, endIndex);
+		return endIndex < 0 ? fileName : fileName.substring(0, endIndex);
 	}
 
 	public static String makePath(String... names) {

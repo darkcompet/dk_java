@@ -12,10 +12,11 @@ public interface DkConst {
 	String LS = System.getProperty("line.separator");
 	String FS = File.separator; // file path separator: / (unix, macos...) or \\ (windows...)
 	String EMPTY_STRING = "";
-	char SPACE_CHAR = ' '; // 1 byte
+	char SPACE_CHAR = ' ';
+	String SPACE = " ";
 
 	/**
-	 * language/country code.
+	 * Language/Country code.
 	 */
 	String LANG_VIETNAM = "vi";
 	String LANG_ENGLISH = "en";

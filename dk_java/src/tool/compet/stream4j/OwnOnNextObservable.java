@@ -9,7 +9,7 @@ import tool.compet.core4j.DkRunnable1;
 /**
  * This node just execute `Runnable` from caller and pass the result from above-node to under-node.
  */
-public class OwnOnNextObservable<M> extends DkObservable<M, OwnOnNextObservable> {
+public class OwnOnNextObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkObservableSource<M> parent;
 	private final DkRunnable1<M> action;
 

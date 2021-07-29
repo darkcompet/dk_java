@@ -7,7 +7,7 @@ package tool.compet.stream4j;
 import tool.compet.core4j.DkCallable;
 
 public class OwnGodCallableObserver<M> extends DkControllable<M> {
-	public final DkCallable<M> callable;
+	protected final DkCallable<M> callable;
 
 	public OwnGodCallableObserver(DkObserver<M> child, DkCallable<M> callable) {
 		super(child);
@@ -16,21 +16,21 @@ public class OwnGodCallableObserver<M> extends DkControllable<M> {
 
 	public void start() {
 		try {
-			onSubscribe(this);
+			child.onSubscribe(this);
 
 			if (isCancel) {
 				isCanceled = true;
 				return;
 			}
 
-			onNext(callable.call());
-			onComplete();
+			child.onNext(callable.call());
+			child.onComplete();
 		}
 		catch (Exception e) {
-			onError(e);
+			child.onError(e);
 		}
 		finally {
-			onFinal();
+			child.onFinal();
 		}
 	}
 

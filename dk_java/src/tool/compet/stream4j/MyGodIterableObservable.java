@@ -7,7 +7,7 @@ package tool.compet.stream4j;
 /**
  * God observable node.
  */
-class MyGodIterableObservable<M> extends DkObservable<M, MyGodIterableObservable> {
+class MyGodIterableObservable<M> extends TheObservableSourceImpl<M> {
 	private final Iterable<M> items;
 
 	MyGodIterableObservable(Iterable<M> items) {

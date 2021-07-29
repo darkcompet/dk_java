@@ -7,7 +7,7 @@ package tool.compet.stream4j;
 /**
  * God observable node.
  */
-class MyGodControllableObservable<M> extends DkObservable<M, MyGodControllableObservable> {
+class MyGodControllableObservable<M> extends TheObservableSourceImpl<M> {
 	private final DkControllable<M> controllable;
 
 	MyGodControllableObservable(DkControllable<M> controllable) {

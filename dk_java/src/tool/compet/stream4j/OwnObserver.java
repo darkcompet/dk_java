@@ -5,12 +5,15 @@
 package tool.compet.stream4j;
 
 import tool.compet.core4j.BuildConfig;
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 
-public class OwnObserver<T> implements DkObserver<T> {
-	protected final DkObserver<T> child;
+/**
+ * @param <M> Model type.
+ */
+public class OwnObserver<M> implements DkObserver<M> {
+	protected final DkObserver<M> child;
 
-	public OwnObserver(DkObserver<T> child) {
+	public OwnObserver(DkObserver<M> child) {
 		this.child = child;
 	}
 
@@ -20,7 +23,7 @@ public class OwnObserver<T> implements DkObserver<T> {
 	}
 
 	@Override
-	public void onNext(T result) throws Exception {
+	public void onNext(M result) throws Exception {
 		child.onNext(result);
 	}
 
@@ -40,7 +43,7 @@ public class OwnObserver<T> implements DkObserver<T> {
 
 		if (BuildConfig.DEBUG) {
 			if (++__testFinalCount > 1) {
-				DkConsoleLogs.warning(this, "Wrong implementation of #onFinal. Please review code !");
+				DkLogs.warning(this, "Wrong implementation of #onFinal. Please review code !");
 			}
 		}
 	}

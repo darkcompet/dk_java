@@ -7,8 +7,10 @@ package tool.compet.stream4j;
 /**
  * Observable.subscribe()で登録されたObserverをどんどん上のObservableに伝搬していきます。
  * 上の親Observerに何かあったとき、子Observerに下記のような関数を通して通知します。
+ *
+ * @param <M> Model type.
  */
-public interface DkObserver<T> {
+public interface DkObserver<M> {
 	/**
 	 * タスクが実行用スレッド(通常はバックグラウンドスレッド)に移る直前に、実行支配可能のControllableが
 	 * この関数を通じて子Observerに渡します。子Observerでは、いつでもタスクを支配(キャンセル、再生、停止等)できます。
@@ -28,7 +30,7 @@ public interface DkObserver<T> {
 	 * @throws Exception This was wrapped with try/catch block at parent node, so normally,
 	 *                   child node does not need to try/catch this when parent passed down this to.
 	 */
-	void onNext(T item) throws Exception;
+	void onNext(M item) throws Exception;
 
 	/**
 	 * エラー等が発生したとき、親Observerがこの関数を通じて、子Observerに通知します。

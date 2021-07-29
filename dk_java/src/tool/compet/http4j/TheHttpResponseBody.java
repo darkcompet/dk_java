@@ -11,16 +11,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
 import tool.compet.core4j.BuildConfig;
-import tool.compet.core4j.DkConsoleLogs;
+import tool.compet.core4j.DkLogs;
 import tool.compet.core4j.DkConst;
 import tool.compet.core4j.DkUtils;
 import tool.compet.core4j.DkByteArrayList;
 import tool.compet.json4j.DkJsonConverter;
 
-public class TheResponseBody {
+public class TheHttpResponseBody {
 	protected final HttpURLConnection connection;
 
-	protected TheResponseBody(HttpURLConnection connection) {
+	protected TheHttpResponseBody(HttpURLConnection connection) {
 		this.connection = connection;
 	}
 
@@ -41,13 +41,13 @@ public class TheResponseBody {
 			}
 
 			if (BuildConfig.DEBUG) {
-				DkConsoleLogs.info(this, "Got response as bytes, count: %d", byteList.size());
+				DkLogs.info(this, "Got response as bytes, count: %d", byteList.size());
 			}
 
 			return byteList.toArray();
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(this, e);
+			DkLogs.error(this, e);
 			return null;
 		}
 		finally {
@@ -71,7 +71,7 @@ public class TheResponseBody {
 			}
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(TheResponseBody.class, e);
+			DkLogs.error(TheHttpResponseBody.class, e);
 			return null;
 		}
 		finally {
@@ -79,7 +79,7 @@ public class TheResponseBody {
 		}
 
 		if (BuildConfig.DEBUG) {
-			DkConsoleLogs.info(this, "Got response as string: %s", builder.toString());
+			DkLogs.info(this, "Got response as string: %s", builder.toString());
 		}
 
 		return builder.toString();
@@ -96,13 +96,13 @@ public class TheResponseBody {
 			String json = DkUtils.stream2string(connection.getInputStream());
 
 			if (BuildConfig.DEBUG) {
-				DkConsoleLogs.info(this, "Got response as json: %s", json);
+				DkLogs.info(this, "Got response as json: %s", json);
 			}
 
 			return DkJsonConverter.getIns().json2obj(json, responseClass);
 		}
 		catch (Exception e) {
-			DkConsoleLogs.error(TheResponseBody.class, e);
+			DkLogs.error(TheHttpResponseBody.class, e);
 			return null;
 		}
 		finally {
